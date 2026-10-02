@@ -1,0 +1,795 @@
+@import "tailwindcss";
+
+@theme {
+  /* Voices-inspired humanitarian palette.
+      Bone canvas, warm-paper surfaces, espresso ink, ember primary,
+      umber secondary. Token NAMES are unchanged so every page re-skins. */
+  --color-canvas: #e4e3d3;
+  --color-surface: #fbfaf3;
+  --color-line: #d8d4bd;
+  --color-line-strong: #b3ad93;
+  --color-slate-ink: #1b0b07;
+  --color-slate-body: #5f4b3b;
+
+  --color-teal-brand: #942702;
+  --color-teal-brand-hover: #7a2002;
+  --color-teal-tint: #f9e9dc;
+
+  --color-alert: #b3231a;
+  --color-alert-tint: #fdecea;
+  --color-warn: #b45309;
+  --color-warn-tint: #fdf3e3;
+  --color-ok: #4d7c0f;
+  --color-ok-tint: #f0f7e0;
+
+  /* New expressive tokens */
+  --color-ember: #942702;
+  --color-ember-deep: #5c1a02;
+  --color-umber: #664236;
+  --color-bone: #e1e2d4;
+  --color-sand: #efead6;
+  --color-espresso: #1b0b07;
+
+  /* Human font pack — one face, one crisis job.
+     alert:   Archivo Black/SemiBold — sirens, banners, evacuation orders
+     display: Plus Jakarta Sans Bold/XBold — page + section headings
+     sans:    Open Sans Regular/Medium — body copy, guides, instructions
+     ui:      Inter Medium/SemiBold — buttons, nav, labels, filters
+     mono:    IBM Plex Mono Regular/Medium — coords, timers, ledger */
+  --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jakarta), var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-alert: var(--font-archivo), var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-ui: var(--font-inter), var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* Warm, human geometry — soft rounds everywhere. rounded-full
+      (dots, pills, avatars) still rounds fully. */
+  --radius: 1rem;
+  --radius-xs: 0.625rem;
+  --radius-sm: 0.75rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+  --radius-4xl: 3rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-slate-body);
+  font-family: var(--font-sans);
+  font-size: 16px; /* never below 16px — stressed mobile readers */
+  line-height: 1.65; /* generous leading for shaky hands / glare */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+  /* Safety net: oversized decorative layers can never cause
+     horizontal scrolling. `clip` (not `hidden`) preserves the
+     sticky header. */
+  overflow-x: clip;
+}
+
+/* ============ Crisis typography hierarchy ============
+   1. ALERTS (Archivo 900/600): red banners, evacuation orders,
+      siren-level headers. Condensed punch, open counters —
+      more words per mobile line, legible through smoke/glare.
+   2. HEADINGS (Plus Jakarta Sans 700/800): page + section titles.
+      Warm geometric curves — authority without cold sterility.
+   3. BODY (Open Sans 400/500): guides, updates, instructions.
+      Tall x-height + open letterforms — tireless stressed reading.
+   4. UI (Inter 500/600): buttons, nav, form labels, filters.
+      Engineered micro-text — I/l/1 never confused on vital taps.
+   5. DATA (IBM Plex Mono 400/500): coords, timers, capacities,
+      ledger. Fixed width — live numbers never jump on refresh.
+   Sentence case everywhere — never all-caps paragraphs (caps cut
+   reading speed ~15% under stress). */
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.font-alert {
+  font-family: var(--font-alert);
+  letter-spacing: 0;
+}
+
+.font-ui {
+  font-family: var(--font-ui);
+  letter-spacing: 0.08em;
+}
+
+h1, h2, h3, .type-headline {
+  font-family: var(--font-display);
+  color: var(--color-slate-ink);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+/* Critical alert headline — siren-level, used sparingly */
+.type-alert {
+  font-family: var(--font-alert);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: 0;
+  font-size: clamp(2rem, 6vw, 4.5rem);
+}
+
+/* Page headline */
+.type-page {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  font-size: clamp(1.9rem, 4.5vw, 3.5rem);
+}
+
+/* Section headline */
+.type-section {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* Body + stressed-reading rules */
+.type-body, p {
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+/* Tabular numbers for counts, stats, ledger, timers */
+.tnum {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* Data readouts: fixed-width glyphs, calm tracking so tables align */
+.font-mono {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  letter-spacing: 0.02em;
+}
+
+::selection {
+  background: var(--color-teal-brand);
+  color: #fff7ef;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  outline-offset: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-teal-brand);
+  outline-offset: 2px;
+}
+
+/* Signature: mono kicker + blinking caret */
+.caret-blink {
+  animation: caret-blink 1.06s step-end infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Blueprint dot field used behind hero panels */
+.dotfield {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-slate-ink) 12%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 20px 20px;
+}
+
+/* 45deg hatch used for the corner ruler squares */
+.hatch {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-line-strong) 0 1px,
+    transparent 1px 5px
+  );
+}
+
+/* Choropleth states fade+rise in, staggered by the component */
+@keyframes map-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.map-enter {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: map-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition:
+    fill 180ms ease,
+    stroke 180ms ease;
+}
+
+.map-enter:hover,
+.map-enter:focus-visible {
+  stroke: var(--color-slate-ink);
+  stroke-width: 1.2;
+}
+
+/* Accessibility: honour reduced-motion for the alert ticker */
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track,
+  .caret-blink,
+  .map-enter {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  animation: ticker 40s linear infinite;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* ---------- Classic minimal polish + motion ---------- */
+
+/* Page entrance: subtle rise + fade for main content */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main > div,
+main > section {
+  animation: page-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Staggered card entrance */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.12s; }
+.rise-3 { animation-delay: 0.19s; }
+.rise-4 { animation-delay: 0.26s; }
+.rise-5 { animation-delay: 0.33s; }
+.rise-6 { animation-delay: 0.4s; }
+
+/* Card hover: gentle lift + border emphasis (classic, restrained) */
+.card-hover {
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-line-strong);
+  box-shadow: 0 8px 24px rgba(9, 9, 11, 0.07);
+}
+
+/* Buttons: soft press feedback */
+a[class*="bg-teal-brand"],
+button[class*="bg-teal-brand"],
+a[class*="bg-slate-ink"],
+button[class*="bg-slate-ink"] {
+  transition:
+    transform 120ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+a[class*="bg-teal-brand"]:active,
+button[class*="bg-teal-brand"]:active {
+  transform: translateY(1px);
+}
+
+/* Live pulse dot for tracking surfaces */
+@keyframes live-ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+.live-dot {
+  animation: live-ping 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Skeleton shimmer for loading states */
+@keyframes shimmer {
+  from {
+    background-position: -400px 0;
+  }
+  to {
+    background-position: 400px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-canvas) 25%,
+    var(--color-surface) 50%,
+    var(--color-canvas) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* Refined scrollbar for queue panels */
+.nice-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-strong) transparent;
+}
+
+.nice-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.nice-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-line-strong);
+}
+
+.nice-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Classic underline link sweep */
+.link-sweep {
+  position: relative;
+}
+
+.link-sweep::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.link-sweep:hover::after {
+  transform: scaleX(1);
+}
+
+/* Accessibility: honour reduced-motion for all new motion */
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track,
+  .caret-blink,
+  .map-enter,
+  .live-dot,
+  .shimmer,
+  .rise,
+  main > div,
+  main > section {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  .card-hover:hover {
+    transform: none;
+  }
+}
+
+/* ================= Voices motion + texture system ================= */
+
+/* Scroll reveal — .reveal starts hidden, IntersectionObserver adds
+   .is-visible. Delay via --reveal-delay. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-scale {
+  transform: translateY(28px) scale(0.97);
+}
+
+.reveal-scale.is-visible {
+  transform: translateY(0) scale(1);
+}
+
+/* Hero entrance */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(34px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-in {
+  animation: hero-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-in-1 { animation-delay: 0.08s; }
+.hero-in-2 { animation-delay: 0.18s; }
+.hero-in-3 { animation-delay: 0.3s; }
+.hero-in-4 { animation-delay: 0.42s; }
+.hero-in-5 { animation-delay: 0.54s; }
+
+/* Slow ambient float for hero orbs / cards */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.float-y {
+  animation: float-y 7s ease-in-out infinite;
+}
+
+.float-y-slow {
+  animation: float-y 11s ease-in-out infinite;
+}
+
+/* Ember glow pulse behind the hero CTA */
+@keyframes ember-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.06);
+  }
+}
+
+.ember-breathe {
+  animation: ember-breathe 5s ease-in-out infinite;
+}
+
+/* Film grain overlay for dark storytelling panels */
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.14;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Giant outlined ghost type behind sections */
+.ghost-type {
+  -webkit-text-stroke: 1px color-mix(in srgb, currentColor 26%, transparent);
+  color: transparent;
+  user-select: none;
+}
+
+/* Story card image zoom */
+.story-zoom img,
+.story-zoom .story-art {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.story-zoom:hover img,
+.story-zoom:hover .story-art {
+  transform: scale(1.05);
+}
+
+/* Warm card lift */
+.lift {
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms ease,
+    border-color 260ms ease;
+}
+
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 44px rgba(27, 11, 7, 0.14);
+  border-color: var(--color-line-strong);
+}
+
+/* Ember CTA sweep */
+.btn-ember {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn-ember::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(120deg, #b93a06, #942702 55%, #5c1a02);
+  background-size: 200% 100%;
+  background-position: 0% 0;
+  transition: background-position 0.5s ease;
+}
+
+.btn-ember:hover::before {
+  background-position: 100% 0;
+}
+
+/* Slow rotating badge ring */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-slow {
+  animation: spin-slow 22s linear infinite;
+}
+
+/* Marquee (second flavour, reverse-capable) */
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee-x 32s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.marquee-reverse {
+  animation-direction: reverse;
+}
+
+/* Ticker tape divider */
+.tape {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-teal-brand) 0 14px,
+    var(--color-espresso) 14px 28px
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hero-in,
+  .float-y,
+  .float-y-slow,
+  .ember-breathe,
+  .marquee-track,
+  .spin-slow {
+    animation: none !important;
+  }
+  .lift:hover,
+  .story-zoom:hover img,
+  .story-zoom:hover .story-art {
+    transform: none;
+  }
+}
+
+/* ================= Journey system: gate + study + impact ================= */
+
+/* Animated gradient headline */
+@keyframes gradient-pan {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.gradient-text {
+  background: linear-gradient(100deg, #ffd9a8, #fff7ef 25%, #ffb14d 50%, #7dd3fc 75%, #ffd9a8);
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-pan 7s ease-in-out infinite;
+}
+
+/* Storm gate weather */
+@keyframes cloud-slide {
+  0% { transform: translateX(-6%); }
+  50% { transform: translateX(10%); }
+  100% { transform: translateX(-6%); }
+}
+.cloud-drift { animation: cloud-slide 14s ease-in-out infinite; }
+.cloud-drift-slow { animation: cloud-slide 22s ease-in-out infinite; }
+
+.rain-layer {
+  background-image: repeating-linear-gradient(
+    115deg,
+    transparent 0 14px,
+    rgba(255, 255, 255, 0.16) 14px 15px,
+    transparent 15px 30px
+  );
+  background-size: 200% 200%;
+  animation: rain-fall 1.6s linear infinite;
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 85%, transparent);
+}
+@keyframes rain-fall {
+  from { background-position: 0 -60px; }
+  to { background-position: -40px 60px; }
+}
+
+@keyframes glyph-float {
+  0%, 100% { transform: translateY(0) rotate(-6deg); opacity: 0.22; }
+  50% { transform: translateY(-22px) rotate(8deg); opacity: 0.45; }
+}
+.float-glyph { animation: glyph-float 7s ease-in-out infinite; }
+
+@keyframes lightning-flash {
+  0%, 91%, 94%, 98%, 100% { opacity: 0; }
+  92%, 96% { opacity: 0.09; }
+}
+.lightning { animation: lightning-flash 9s linear infinite; }
+
+/* Quake shake for earthquake cards */
+@keyframes quake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 2px); }
+}
+.quake-hover:hover { animation: quake 0.4s linear 2; }
+
+/* Cyclone spin badge */
+@keyframes cyclone-spin {
+  to { transform: rotate(360deg); }
+}
+.cyclone-spin { animation: cyclone-spin 6s linear infinite; }
+
+/* Wave divider */
+.wave-divider {
+  background: radial-gradient(circle at 50% 0%, transparent 34px, var(--color-canvas) 35px);
+  background-size: 68px 40px;
+  background-repeat: repeat-x;
+  height: 40px;
+}
+
+/* Bouncing scroll hint */
+@keyframes scroll-hint {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(10px); opacity: 0.5; }
+}
+.scroll-hint { animation: scroll-hint 1.8s ease-in-out infinite; }
+
+/* Pulsing ring behind primary CTA */
+@keyframes cta-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255, 177, 77, 0.5); }
+  70% { box-shadow: 0 0 0 16px rgba(255, 177, 77, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 177, 77, 0); }
+}
+.cta-ring { animation: cta-ring 2.4s ease-out infinite; }
+
+/* Tilt cards */
+.tilt-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Flip cards for study zone */
+.flip { perspective: 1200px; }
+.flip-inner {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.flip:hover .flip-inner, .flip:focus-within .flip-inner { transform: rotateY(180deg); }
+.flip-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-back { transform: rotateY(180deg); }
+
+/* Timeline rail for impact page */
+.timeline-rail {
+  background: linear-gradient(to bottom, var(--color-teal-brand), var(--color-warn), var(--color-ok));
+}
+
+/* Shimmer border for featured cards */
+@keyframes border-shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.shimmer-border {
+  background: linear-gradient(110deg, #942702, #ffb14d, #0e7490, #942702);
+  background-size: 250% 250%;
+  animation: border-shimmer 6s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-text, .cloud-drift, .cloud-drift-slow, .rain-layer,
+  .float-glyph, .lightning, .scroll-hint, .cta-ring, .shimmer-border {
+    animation: none !important;
+  }
+  .tilt-card { transform: none !important; }
+  .flip:hover .flip-inner, .flip:focus-within .flip-inner { transform: none; }
+}
