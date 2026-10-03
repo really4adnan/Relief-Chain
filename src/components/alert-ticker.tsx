@@ -1,4 +1,5 @@
 import { getAllDisasters } from "@/lib/repo";
+import { NdmaLevelBadge } from "@/components/ndma-badge";
 import type { Severity } from "@/lib/data";
 
 const severityStyles: Record<Severity, string> = {
@@ -17,6 +18,7 @@ export async function AlertTicker() {
       >
         {d.severity}
       </span>
+      <NdmaLevelBadge severity={d.severity} affected={d.affected} dark />
       <span className="text-sm text-white">
         {d.state}: {d.title} — {d.affected.toLocaleString("en-IN")} affected
       </span>

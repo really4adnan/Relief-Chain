@@ -96,8 +96,8 @@ export default function SignupPage() {
             <span className="font-ui text-[11px] font-semibold uppercase tracking-widest text-warn">
               Notice&nbsp;·&nbsp;
             </span>
-            Google One-Tap Login is currently under maintenance. Please
-            use Email to create your account.
+            Google One-Tap Login is under routine maintenance. Please
+            use Email / Magic Link to create your account.
           </p>
           <div className="mt-4 opacity-60 grayscale">
             <GoogleAuthButton mode="signup" next="/start" />

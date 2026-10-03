@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { AlertTicker } from "@/components/alert-ticker";
 import { DisasterArt } from "@/components/disaster-art";
+import { NdmaLevelBadge } from "@/components/ndma-badge";
 import { StormField } from "@/components/journey";
 import { CountUp, Reveal } from "@/components/motion";
 import { Badge, Kicker, PrimaryCTA, SectionHead } from "@/components/ui";
@@ -286,6 +287,7 @@ export default async function ImpactPage() {
               {active.slice(0, 4).map((d) => (
                 <li key={d.id} className="flex items-center gap-3 rounded-xl border border-bone/15 bg-bone/[0.06] px-4 py-3">
                   <Badge tone={d.severity === "critical" ? "alert" : "warn"}>{d.severity}</Badge>
+                  <NdmaLevelBadge severity={d.severity} affected={d.affected} dark />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-bone">{d.title}</p>
                     <p className="truncate font-mono text-[11px] text-bone/60">

@@ -11,6 +11,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { AlertTicker } from "@/components/alert-ticker";
+import { NdmaLevelBadge } from "@/components/ndma-badge";
 import { Reveal } from "@/components/motion";
 import { Kicker, PrimaryCTA, SecondaryCTA } from "@/components/ui";
 import { getAllDisasters, getAllTenders } from "@/lib/repo";
@@ -45,11 +46,11 @@ export default async function Home() {
           <Reveal>
             <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-1.5 font-mono text-[11px] font-medium tracking-wide text-slate-ink shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
               <span className="live-dot inline-block size-1.5 rounded-full bg-teal-brand" />
-              Live Feeds Active&nbsp;&nbsp;|&nbsp;&nbsp;
+              Live Data Active&nbsp;&nbsp;|&nbsp;&nbsp;
               {liveStates.length > 0
                 ? liveStates.join(", ")
                 : "Assam, Odisha & Tamil Nadu"}
-              &nbsp;&nbsp;|&nbsp;&nbsp;Verified Network India
+              &nbsp;&nbsp;|&nbsp;&nbsp;NDMA 1078 & 112 Direct Feeds
             </p>
           </Reveal>
 
@@ -138,7 +139,7 @@ export default async function Home() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block font-display text-xl font-medium tracking-tight text-slate-ink">
-                        I Need Relief
+                        I Need Help
                       </span>
                       <span className="mt-0.5 block text-sm leading-6 text-slate-body">
                         Find who responds near you, with live tracking of
@@ -161,11 +162,11 @@ export default async function Home() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block font-display text-xl font-medium tracking-tight text-slate-ink">
-                        Explore Live Disasters
+                        Explore Live Map
                       </span>
                       <span className="mt-0.5 block text-sm leading-6 text-slate-body">
-                        {active.length} active registers on the map — what&rsquo;s
-                        unfolding, right now.
+                        {active.length} live registers plus the satellite
+                        event feed — what&rsquo;s unfolding, right now.
                       </span>
                     </span>
                     <ArrowRight
@@ -184,7 +185,7 @@ export default async function Home() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block font-display text-xl font-medium tracking-tight text-slate-ink">
-                        Claim Open Tenders
+                        Claim Relief Tenders
                       </span>
                       <span className="mt-0.5 block text-sm leading-6 text-slate-body">
                         {openTenders.length} open relief jobs — food, boats,
@@ -237,7 +238,7 @@ export default async function Home() {
                   >
                     <HeartHandshake size={22} className="text-teal-brand" />
                     <span className="mt-4 block font-display text-2xl font-medium tracking-tight text-slate-ink">
-                      Donate <span className="font-mono text-base text-teal-brand">(₹0 Fee)</span>
+                      Donate <span className="font-mono text-base text-teal-brand">(₹0 Commission)</span>
                     </span>
                     <span className="mt-1 block text-sm leading-6 text-slate-body">
                       Every rupee on a public ledger. No commission, full
@@ -253,16 +254,16 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Subtle link bar — Know Nature + mission */}
+          {/* Subtle link bar — NDMA drills + impact reports */}
           <Reveal delay={120}>
             <p className="mt-8 border-t border-line pt-5 text-center text-sm leading-6 text-slate-body">
-              New here?{" "}
-              <Link href="/learn" className="text-slate-ink underline underline-offset-4 hover:text-teal-brand">
-                Learn about disaster resilience
+              Looking to learn?{" "}
+              <Link href="/learn#ndma-drills" className="text-slate-ink underline underline-offset-4 hover:text-teal-brand">
+                Access NDMA Safety Drills
               </Link>{" "}
-              or{" "}
-              <Link href="/about" className="text-slate-ink underline underline-offset-4 hover:text-teal-brand">
-                read our mission →
+              &{" "}
+              <Link href="/impact" className="text-slate-ink underline underline-offset-4 hover:text-teal-brand">
+                Disaster Impact Reports →
               </Link>
             </p>
           </Reveal>
@@ -292,6 +293,11 @@ export default async function Home() {
                       <span className="rounded-full border border-white/25 px-3 py-1 font-ui text-[10px] font-semibold uppercase tracking-widest text-white/80">
                         {featured.type}
                       </span>
+                      <NdmaLevelBadge
+                        severity={featured.severity}
+                        affected={featured.affected}
+                        dark
+                      />
                     </p>
                     <p className="mt-5 font-mono text-[11px] uppercase tracking-widest text-white/60">
                       {featured.region}, {featured.state}
@@ -378,8 +384,8 @@ export default async function Home() {
                   <span className="font-ui text-[11px] font-semibold uppercase tracking-widest text-warn">
                     Notice&nbsp;·&nbsp;
                   </span>
-                  Google One-Tap Login is currently under maintenance.
-                  Please use Email / Passwordless Magic Link to sign in.
+                  Google One-Tap Login is under routine maintenance.
+                  Please use Email / Magic Link to log in.
                 </p>
                 <h3 className="mt-5 font-display text-2xl font-medium tracking-tight text-slate-ink">
                   Sign in with email

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AlertTicker } from "@/components/alert-ticker";
 import { DisasterArt } from "@/components/disaster-art";
+import { NdmaLevelBadge } from "@/components/ndma-badge";
 import { Badge, SectionHead } from "@/components/ui";
 import { getAllDisasters } from "@/lib/repo";
 import { getIndiaRegionEvents, type LiveEvent } from "@/lib/eonet";
@@ -183,6 +184,7 @@ export default async function DisastersPage({
                 <span className="relative flex flex-wrap items-center gap-2">
                   <Badge tone={severityTone(d.severity)}>{d.severity}</Badge>
                   <Badge tone={statusTone(d.status)}>{d.status}</Badge>
+                  <NdmaLevelBadge severity={d.severity} affected={d.affected} dark />
                 </span>
                 <span className="relative rounded-full bg-black/35 px-3 py-1 font-ui text-[10px] font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
                   {d.type}

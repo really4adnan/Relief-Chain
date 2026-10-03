@@ -78,8 +78,8 @@ export default function LoginPage() {
         <span className="font-ui text-[11px] font-semibold uppercase tracking-widest text-warn">
           Notice&nbsp;·&nbsp;
         </span>
-        Google One-Tap Login is currently under maintenance. Please use
-        Email / Passwordless Magic Link to sign in.
+        Google One-Tap Login is under routine maintenance. Please use
+        Email / Magic Link to log in.
       </p>
 
       <div className="mt-4 opacity-60 grayscale">
