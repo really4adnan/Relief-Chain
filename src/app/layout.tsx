@@ -3,58 +3,37 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CookieBanner } from "@/components/cookie-banner";
-/* Human font pack — each face has one crisis job (see globals.css).
-   Only the listed weights load, subsets latin, display=swap:
-   fast on 2G/3G, self-hosted (no render-blocking Google <link>). */
+/* Editorial humanist type — warm serif headlines, Jakarta UI,
+   JetBrains Mono for timestamps, helplines & live stats.
+   Only the listed weights load, subsets latin, display=swap. */
 import {
-  Archivo,
-  IBM_Plex_Mono,
-  Inter,
-  Open_Sans,
+  JetBrains_Mono,
+  Newsreader,
   Plus_Jakarta_Sans,
 } from "next/font/google";
 
-/* Emergency alerts & high-visibility notices — condensed punch,
-   open counters, legible through smoke / glare / distance. */
-const archivo = Archivo({
-  variable: "--font-archivo",
+/* Headings H1/H2 — editorial serif, human-crafted warmth. */
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
-  weight: ["600", "900"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
-/* Main headings & page titles — warm geometric authority. */
+/* UI text, controls & body — clean geometric sans. */
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
-  weight: ["700", "800"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-/* Body copy & general reading — tall x-height humanist sans,
-   tireless for stressed / low-vision readers. */
-const openSans = Open_Sans({
-  variable: "--font-open-sans",
+/* Emergency timestamps, helplines (112, NDMA 1078) & live stats. */
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-});
-
-/* Buttons, navigation & small UI — micro-text engineering,
-   distinct I/l/1 so vital taps never misread. */
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  display: "swap",
-});
-
-/* Maps, data & system readouts — every glyph same width,
-   live numbers never jump during refresh. */
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 
@@ -62,7 +41,7 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://reliefchain.org";
 
 export const viewport: Viewport = {
-  themeColor: "#1b0b07",
+  themeColor: "#F8F7F4",
   width: "device-width",
   initialScale: 1,
 };
@@ -104,7 +83,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${jakarta.variable} ${openSans.variable} ${inter.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${newsreader.variable} ${jakarta.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <a

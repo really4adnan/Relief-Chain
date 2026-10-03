@@ -128,7 +128,7 @@ export function PrimaryCTA({
   return (
     <Link
       href={href}
-      className={`btn-ember inline-flex h-12 items-center justify-center rounded-full bg-teal-brand px-7 font-ui text-xs font-semibold uppercase tracking-widest text-white shadow-[0_10px_30px_rgba(148,39,2,0.35)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(148,39,2,0.45)] active:translate-y-0 ${className}`}
+      className={`inline-flex h-12 items-center justify-center rounded-full bg-teal-brand px-7 font-ui text-xs font-semibold uppercase tracking-widest text-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:bg-teal-brand-hover active:translate-y-0 active:scale-[0.98] ${className}`}
     >
       {children}
     </Link>
@@ -148,7 +148,7 @@ export function SecondaryCTA({
   return (
     <Link
       href={href}
-      className={`inline-flex h-12 items-center justify-center rounded-full border border-line-strong bg-surface px-7 font-ui text-xs font-semibold uppercase tracking-widest text-slate-ink transition-all hover:-translate-y-0.5 hover:border-slate-ink ${className}`}
+      className={`inline-flex h-12 items-center justify-center rounded-full border border-line-strong bg-surface px-7 font-ui text-xs font-semibold uppercase tracking-widest text-slate-ink shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-slate-ink active:translate-y-0 active:scale-[0.98] ${className}`}
     >
       {children}
     </Link>

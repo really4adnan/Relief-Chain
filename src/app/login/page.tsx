@@ -74,7 +74,17 @@ export default function LoginPage() {
         text: "New to ReliefChain?",
       }}
     >
-      <GoogleAuthButton mode="signin" next="/start" />
+      <p className="rounded-xl border border-warn/30 bg-warn-tint px-4 py-3 text-sm leading-6 text-slate-ink">
+        <span className="font-ui text-[11px] font-semibold uppercase tracking-widest text-warn">
+          Notice&nbsp;·&nbsp;
+        </span>
+        Google One-Tap Login is currently under maintenance. Please use
+        Email / Passwordless Magic Link to sign in.
+      </p>
+
+      <div className="mt-4 opacity-60 grayscale">
+        <GoogleAuthButton mode="signin" next="/start" />
+      </div>
 
       <div className="my-5 flex items-center gap-3 font-ui text-[10px] uppercase tracking-widest text-slate-body/70">
         <span className="h-px flex-1 bg-line" />

@@ -77,11 +77,26 @@ export function SiteHeader() {
           <HeaderAuth />
         </nav>
 
-        <div className="ml-auto flex shrink-0 items-center">
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+          <a
+            href="tel:112"
+            aria-label="Emergency dial 112"
+            className="hidden items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-2 font-mono text-[11px] font-semibold tracking-wide text-slate-ink shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-alert active:scale-[0.98] md:inline-flex"
+          >
+            <span className="inline-block size-1.5 rounded-full bg-alert" />
+            112
+          </a>
+          <a
+            href="tel:1078"
+            aria-label="NDMA helpline 1078"
+            className="hidden items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-2 font-mono text-[11px] font-semibold tracking-wide text-slate-ink shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-alert active:scale-[0.98] lg:inline-flex"
+          >
+            NDMA 1078
+          </a>
           <Link
             href="/register"
             aria-label="Join the chain — register your organisation"
-            className="btn-ember relative z-10 inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-teal-brand px-4 py-2.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-white shadow-[0_8px_24px_rgba(148,39,2,0.35)] transition-all hover:-translate-y-0.5 sm:px-5"
+            className="relative z-10 inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-teal-brand px-4 py-2.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:bg-teal-brand-hover active:scale-[0.98] sm:px-5"
           >
             Join<span className="hidden sm:inline">&nbsp;the chain</span>
           </Link>

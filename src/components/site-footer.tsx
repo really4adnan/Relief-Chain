@@ -49,6 +49,10 @@ export function SiteFooter() {
           <p className="mt-4 font-ui text-[11px] uppercase tracking-widest text-slate-body/70">
             EST. INDIA · 24/7
           </p>
+          <p className="mt-2 text-[13px] leading-5 text-slate-body/80">
+            Open-source relief infrastructure — built in the open, verified
+            in the field.
+          </p>
         </div>
 
         <FooterCol
@@ -112,7 +116,15 @@ export function SiteFooter() {
               <ExternalLink size={14} />
             </a>
           </p>
-          <p>Emergency dial 112 · NDMA 1078</p>
+          <p>Emergency dial{" "}
+            <a href="tel:112" className="font-mono font-semibold normal-case text-slate-ink underline underline-offset-4">
+              112
+            </a>{" "}
+            · NDMA{" "}
+            <a href="tel:1078" className="font-mono font-semibold normal-case text-slate-ink underline underline-offset-4">
+              1078
+            </a>
+          </p>
         </div>
       </div>
     </footer>

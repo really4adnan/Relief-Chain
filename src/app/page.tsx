@@ -1,38 +1,19 @@
 import Link from "next/link";
 import {
-  ArrowDown,
   ArrowRight,
   ArrowUpRight,
-  GraduationCap,
-  Landmark,
-  LogIn,
-  MapPin,
-  UserPlus,
+  Building2,
+  Compass,
+  HandCoins,
+  HeartHandshake,
+  LifeBuoy,
+  Phone,
+  TriangleAlert,
 } from "lucide-react";
 import { AlertTicker } from "@/components/alert-ticker";
-import { DisasterArt } from "@/components/disaster-art";
-import {
-  IntentGrid,
-  StormField,
-  Typewriter,
-} from "@/components/journey";
-import { CountUp, Marquee, Reveal } from "@/components/motion";
-import { Badge, Kicker, PrimaryCTA, SectionHead } from "@/components/ui";
-import { stats, type Disaster } from "@/lib/data";
+import { Reveal } from "@/components/motion";
+import { Kicker, PrimaryCTA, SecondaryCTA } from "@/components/ui";
 import { getAllDisasters, getAllTenders } from "@/lib/repo";
-
-const typeArt: Record<Disaster["type"], string> = {
-  Flood: "linear-gradient(135deg,#0c4a6e 0%,#155e75 55%,#0e7490 100%)",
-  Earthquake: "linear-gradient(135deg,#451a03 0%,#92400e 60%,#b45309 100%)",
-  Cyclone: "linear-gradient(135deg,#1e3a5f 0%,#0369a1 60%,#0ea5e9 100%)",
-  Wildfire: "linear-gradient(135deg,#431407 0%,#9a3412 55%,#ea580c 100%)",
-  Landslide: "linear-gradient(135deg,#292524 0%,#57534e 60%,#857262 100%)",
-  Heatwave: "linear-gradient(135deg,#5c1a02 0%,#c2410c 60%,#f59e0b 100%)",
-};
-
-function urgencyTone(severity: Disaster["severity"]) {
-  return severity === "critical" ? "alert" : severity === "high" ? "warn" : "neutral";
-}
 
 export default async function Home() {
   const [disasters, tenders] = await Promise.all([
@@ -40,443 +21,415 @@ export default async function Home() {
     getAllTenders(),
   ]);
   const active = disasters.filter((d) => d.status === "active");
-  const affectedNow = active.reduce((sum, d) => sum + d.affected, 0);
   const openTenders = tenders.filter((t) => t.status === "Open");
-  const heroStory = active[0];
-  const marqueeTerms = [
-    ...new Set(disasters.slice(0, 10).map((d) => d.state)),
-    "Flood response",
-    "Mass kitchens",
-    "Boat rescue",
-    "Verified network",
-  ];
+
+  // Featured live emergency — Assam Brahmaputra Floods first, else newest active.
+  const featured =
+    disasters.find((d) => d.id === "d1") ??
+    disasters.find(
+      (d) => d.state === "Assam" && d.status === "active",
+    ) ??
+    active[0];
+
+  const liveStates = [
+    ...new Set(active.slice(0, 6).map((d) => d.state)),
+  ].slice(0, 3);
 
   return (
     <>
       <AlertTicker />
 
-      {/* ============ STEP 01 — THE GATE: do you wanna know what nature can cause? ============ */}
-      <section className="bg-canvas px-3 pt-3 sm:px-5 sm:pt-5">
-        <div className="grain relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-espresso text-bone">
-          <StormField />
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="ember-breathe absolute -left-24 -top-24 size-96 rounded-full bg-teal-brand/40 blur-[110px]" />
-            <div className="float-y-slow absolute -bottom-32 right-[-6rem] size-[28rem] rounded-full bg-umber/50 blur-[130px]" />
-            <div className="float-y absolute right-[18%] top-[-4rem] size-56 rounded-full bg-warn/25 blur-[90px]" />
-          </div>
-          <p
-            aria-hidden
-            className="ghost-type pointer-events-none absolute -bottom-8 left-0 z-[1] select-none whitespace-nowrap font-display text-[22vw] font-bold leading-none text-bone lg:text-[19rem]"
-          >
-            NATURE
-          </p>
+      {/* ============ HERO — editorial, one line, two doors ============ */}
+      <section className="bg-canvas">
+        <div className="mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6 sm:pt-20">
+          <Reveal>
+            <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-1.5 font-mono text-[11px] font-medium tracking-wide text-slate-ink shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+              <span className="live-dot inline-block size-1.5 rounded-full bg-teal-brand" />
+              Live Feeds Active&nbsp;&nbsp;|&nbsp;&nbsp;
+              {liveStates.length > 0
+                ? liveStates.join(", ")
+                : "Assam, Odisha & Tamil Nadu"}
+              &nbsp;&nbsp;|&nbsp;&nbsp;Verified Network India
+            </p>
+          </Reveal>
 
-          <div className="relative z-[2] px-6 pb-8 pt-12 sm:px-10 sm:pt-16 lg:px-14">
-            <div className="hero-in hero-in-1 flex flex-wrap items-center gap-3">
-              <span className="inline-flex items-center gap-2 rounded-full bg-teal-brand px-3.5 py-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-white">
-                <span className="live-dot inline-block size-1.5 rounded-full bg-white" />
-                {active.length} active emergencies
-              </span>
-              <span className="font-ui text-[11px] uppercase tracking-widest text-bone/60">
-                Relief network · India
-              </span>
-            </div>
-
-            <h1 className="hero-in hero-in-2 mt-6 max-w-4xl font-display text-[2.6rem] font-semibold leading-[1.0] tracking-tight sm:text-6xl lg:text-7xl">
-              Do you know what{" "}
-              <em className="gradient-text not-italic">nature can do</em>{" "}
-              to us?
+          <Reveal delay={90}>
+            <h1 className="mt-6 max-w-3xl font-display text-4xl font-medium leading-[1.08] tracking-tight text-slate-ink sm:text-6xl">
+              When natural disasters strike,{" "}
+              <em className="text-teal-brand">
+                response shouldn&rsquo;t wait.
+              </em>
             </h1>
-
-            <p className="hero-in hero-in-3 mt-5 max-w-xl text-base leading-7 text-bone/75 sm:text-lg sm:leading-8">
-              <Typewriter
-                phrases={[
-                  "Tsunamis that redraw coastlines…",
-                  "Quakes that flatten cities in 2 minutes…",
-                  "Floods that swallow whole districts…",
-                  "…and the chain that fights back in 38s.",
-                ]}
-              />
-            </p>
-            <p className="hero-in hero-in-3 mt-3 max-w-xl text-sm leading-6 text-bone/60">
-              ReliefChain is a verified network of NGOs, PWD companies and
-              government bodies. Sign in once — then pick why you&apos;re here
-              and see the full story.
-            </p>
-
-            <div className="hero-in hero-in-4 mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/login"
-                className="cta-ring inline-flex h-13 items-center rounded-full bg-bone px-8 py-3.5 font-ui text-xs font-semibold uppercase tracking-widest text-espresso transition-all hover:-translate-y-0.5"
-              >
-                <LogIn size={15} className="mr-2" />
-                Let&apos;s sign in to see
-              </Link>
-              <a
-                href="#why"
-                className="inline-flex h-13 items-center rounded-full border border-bone/30 px-8 py-3.5 font-ui text-xs font-semibold uppercase tracking-widest text-bone transition-all hover:-translate-y-0.5 hover:bg-bone/10"
-              >
-                Yes, show me
-                <ArrowDown size={15} className="scroll-hint ml-2" />
-              </a>
-            </div>
-
-            <div className="hero-in hero-in-5 mt-8 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
-              <div className="flex flex-wrap gap-x-8 gap-y-3 font-ui text-[11px] uppercase tracking-widest text-bone/55">
-                <span>Google one-tap login</span>
-                <span>Free for verified orgs</span>
-                <span>₹0 commission on donations</span>
-              </div>
-              {heroStory && (
-                <Link
-                  href="/impact"
-                  className="story-zoom lift group block overflow-hidden rounded-2xl border border-bone/15 bg-bone/[0.06] backdrop-blur-sm"
-                >
-                  <div
-                    className="story-art relative flex h-32 items-end overflow-hidden p-4"
-                    style={{ background: typeArt[heroStory.type] }}
-                  >
-                    <span className="absolute right-4 top-3 font-display text-6xl font-bold text-white/25">
-                      {heroStory.type[0]}
-                    </span>
-                    <Badge tone={urgencyTone(heroStory.severity)}>
-                      {heroStory.severity}
-                    </Badge>
-                  </div>
-                  <div className="p-5">
-                    <p className="flex items-center gap-1.5 font-ui text-[11px] uppercase tracking-widest text-bone/60">
-                      <MapPin size={12} />
-                      {heroStory.region}, {heroStory.state}
-                    </p>
-                    <p className="mt-2 font-display text-xl font-semibold leading-snug text-bone">
-                      {heroStory.title}
-                    </p>
-                    <p className="mt-2 flex items-center justify-between text-sm text-bone/70">
-                      <span className="font-mono font-semibold text-bone">
-                        <CountUp to={heroStory.affected} /> affected
-                      </span>
-                      <span className="inline-flex items-center gap-1 font-ui text-[11px] uppercase tracking-widest text-warn transition-transform group-hover:translate-x-1">
-                        What caused this <ArrowUpRight size={13} />
-                      </span>
-                    </p>
-                  </div>
-                </Link>
-              )}
-            </div>
-          </div>
-
-          {/* hero stat band */}
-          <div className="relative z-[2] grid grid-cols-2 gap-px border-t border-bone/15 bg-bone/10 lg:grid-cols-4">
-            {[
-              { v: stats.verifiedOrgs, l: "Verified bodies" },
-              { v: openTenders.length, l: "Open tenders" },
-              { v: affectedNow, l: "Affected right now" },
-              { v: stats.dispatched, l: "Alerts dispatched" },
-            ].map((s) => (
-              <div key={s.l} className="bg-espresso/60 px-6 py-5 backdrop-blur-sm">
-                <p className="font-mono text-2xl font-semibold tracking-tight text-bone sm:text-3xl">
-                  <CountUp to={s.v} />
-                </p>
-                <p className="mt-1 font-ui text-[10px] uppercase tracking-widest text-bone/55">
-                  {s.l}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* marquee */}
-      <div className="mt-3 bg-canvas px-3 sm:px-5">
-        <Marquee className="mx-auto max-w-7xl rounded-full border border-line bg-surface py-3">
-          {marqueeTerms.map((t) => (
-            <span
-              key={t}
-              className="mx-5 inline-flex items-center gap-5 whitespace-nowrap font-ui text-xs uppercase tracking-widest text-slate-body"
-            >
-              {t}
-              <span className="text-teal-brand">•</span>
-            </span>
-          ))}
-        </Marquee>
-      </div>
-
-      {/* ============ STEP 03 — WHY ARE YOU HERE? ============ */}
-      <section id="why" className="bg-canvas">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-          <Reveal>
-            <SectionHead
-              eyebrow="Why are you here?"
-              title="Choose your path"
-              desc="After signing in, everyone lands here. Seven paths, one chain — select one to continue directly."
-              action={{ href: "/start", label: "Open full picker" }}
-            />
           </Reveal>
-          <IntentGrid compact />
-        </div>
-      </section>
 
-      {/* ============ STEP 04 — WHAT NATURE CAN CAUSE ============ */}
-      <section id="impact" className="border-y border-line bg-bone">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
-          <Reveal>
-            <SectionHead
-              eyebrow="What nature can cause us"
-              title="Reports from the past, emergencies of today"
-              desc="Tsunami, quakes, floods — what already happened, plus what's unfolding live. Then how ReliefChain answers."
-              action={{ href: "/impact", label: "Full impact story" }}
-            />
+          <Reveal delay={160}>
+            <p className="mt-5 max-w-xl text-base leading-7 text-slate-body sm:text-lg sm:leading-8">
+              ReliefChain is a verified network of NGOs, responders and
+              government bodies across India — one place to find help,
+              fund relief, or put your organisation on the chain.
+            </p>
           </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {active.slice(0, 3).map((d, i) => (
-              <Reveal key={d.id} delay={(i % 3) * 100}>
-                <Link
-                  href="/impact"
-                  className="story-zoom lift group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface"
-                >
-                  <div
-                    className="story-art relative flex h-44 items-end justify-between overflow-hidden p-4"
-                    style={{ background: typeArt[d.type] }}
-                  >
-                    <DisasterArt
-                      type={d.type}
-                      className="absolute inset-0 h-full w-full"
-                    />
-                    <span className="relative">
-                      <Badge tone={urgencyTone(d.severity)}>{d.severity}</Badge>
-                    </span>
-                    <span className="relative rounded-full bg-black/35 px-3 py-1 font-ui text-[10px] font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
-                      {d.type}
-                    </span>
-                  </div>
-                  <div className="flex flex-1 flex-col p-5 sm:p-6">
-                    <p className="flex items-center gap-1.5 font-ui text-[11px] uppercase tracking-widest text-slate-body">
-                      <MapPin size={12} className="text-teal-brand" />
-                      {d.region}, {d.state}
-                    </p>
-                    <h3 className="mt-2.5 font-display text-[1.35rem] font-semibold leading-snug tracking-tight text-slate-ink">
-                      {d.title}
-                    </h3>
-                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-body">
-                      {d.summary}
-                    </p>
-                    <p className="mt-4 flex items-center justify-between border-t border-line pt-4">
-                      <span className="font-mono text-sm font-semibold text-slate-ink">
-                        {d.affected.toLocaleString("en-IN")} affected
-                      </span>
-                      <span className="inline-flex items-center gap-1 font-ui text-[11px] font-semibold uppercase tracking-widest text-teal-brand transition-transform group-hover:translate-x-1">
-                        Why this happened <ArrowUpRight size={13} />
-                      </span>
-                    </p>
-                  </div>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal delay={100}>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <PrimaryCTA href="/impact">
-                See past reports + how we help
-                <ArrowRight size={15} className="ml-2" />
+
+          <Reveal delay={220}>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <PrimaryCTA href="/live">
+                <LifeBuoy size={15} className="mr-2" />
+                Find Emergency Help
               </PrimaryCTA>
-              <Link
-                href="/disasters"
-                className="inline-flex h-12 items-center rounded-full border border-line-strong bg-surface px-7 font-ui text-xs font-semibold uppercase tracking-widest text-slate-ink transition-all hover:-translate-y-0.5"
-              >
-                Open live register →
-              </Link>
+              <SecondaryCTA href="/register">
+                <Building2 size={15} className="mr-2" />
+                Register Body
+              </SecondaryCTA>
             </div>
           </Reveal>
-        </div>
-      </section>
 
-      {/* ============ KNOW NATURE TEASER ============ */}
-      <section id="study" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
-        <Reveal>
-          <SectionHead
-            eyebrow="Know nature"
-            title="Why disasters happen & how to resist"
-            desc="Floods, quakes, cyclones, heatwaves — kid-friendly lessons, flip cards, drills and a 60-second quiz."
-            action={{ href: "/learn", label: "Open Know nature" }}
-          />
-        </Reveal>
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            { t: "Floods", type: "Flood", d: "Why rivers overflow — and the ankle-rule that saves lives.", art: typeArt.Flood },
-            { t: "Earthquakes", type: "Earthquake", d: "Why plates slip — and Drop-Cover-Hold in 10 seconds.", art: typeArt.Earthquake },
-            { t: "Cyclones", type: "Cyclone", d: "Why oceans spin storms — and sheltering before landfall.", art: typeArt.Cyclone },
-          ].map((c, i) => (
-            <Reveal key={c.t} delay={i * 100}>
-              <Link
-                href="/learn"
-                className="quake-hover lift group block overflow-hidden rounded-2xl border border-line bg-surface"
-              >
-                <div className="relative flex h-32 items-end overflow-hidden p-5" style={{ background: c.art }}>
-                  <DisasterArt
-                    type={c.type as Disaster["type"]}
-                    className="absolute inset-0 h-full w-full"
-                  />
-                  <span className="absolute right-4 top-4 grid size-10 place-items-center rounded-full bg-black/30 text-white backdrop-blur-sm">
-                    <GraduationCap size={17} />
-                  </span>
-                </div>
-                <div className="p-5">
-                  <h3 className="font-display text-xl font-semibold tracking-tight text-slate-ink">{c.t}</h3>
-                  <p className="mt-1 text-sm leading-6 text-slate-body">{c.d}</p>
-                  <span className="mt-3 inline-flex items-center gap-1 font-ui text-[11px] font-semibold uppercase tracking-widest text-teal-brand">
-                    Start lesson <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
-                  </span>
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ============ ENTRY ============ */}
-      <section id="enter" className="bg-canvas">
-        <div className="mx-auto max-w-7xl px-4 pb-10 sm:px-6">
-          <Reveal>
-            <SectionHead
-              eyebrow="Sign in to see everything"
-              title="Your chain is one tap away"
-              desc="Google one-tap or email — then tell us why you're here and explore impact, tenders and lessons."
-            />
+          <Reveal delay={280}>
+            <p className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs tracking-wide text-slate-body">
+              <span className="inline-flex items-center gap-1.5">
+                <Phone size={12} className="text-alert" />
+                Emergency? Dial{" "}
+                <a href="tel:112" className="font-semibold text-slate-ink underline underline-offset-4">
+                  112
+                </a>
+                <span className="text-slate-body/50">·</span> NDMA{" "}
+                <a href="tel:1078" className="font-semibold text-slate-ink underline underline-offset-4">
+                  1078
+                </a>
+              </span>
+              <span className="hidden h-3 w-px bg-line-strong sm:block" />
+              <span>
+                {active.length} active registers · {openTenders.length} open
+                tenders · ₹0 fee on donations
+              </span>
+            </p>
           </Reveal>
-          <div className="grid gap-4 md:grid-cols-2">
-            <Reveal>
-              <Link
-                href="/login"
-                className="lift group flex h-full flex-col rounded-2xl border border-line bg-surface p-7 sm:p-9"
-              >
-                <div className="flex items-center justify-between">
-                  <Kicker>Entry · Google + email</Kicker>
-                  <span className="grid size-10 place-items-center rounded-full bg-canvas text-slate-ink transition-all duration-300 group-hover:bg-slate-ink group-hover:text-bone">
-                    <LogIn size={17} />
-                  </span>
-                </div>
-                <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight text-slate-ink">
-                  Sign in
-                </h2>
-                <p className="mt-2 max-w-md text-[15px] leading-7">
-                  Includes Google one-tap. Opens your path picker, live map,
-                  tenders and the funds ledger.
+        </div>
+      </section>
+
+      {/* ============ CHOOSE YOUR PATH — asymmetric 60/40 ============ */}
+      <section id="paths" className="border-y border-line bg-surface">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16">
+          <Reveal>
+            <Kicker>Choose your path</Kicker>
+            <h2 className="mt-3 max-w-2xl font-display text-3xl font-medium leading-tight tracking-tight text-slate-ink sm:text-4xl">
+              Two doors. Pick the one that matches your urgency.
+            </h2>
+          </Reveal>
+
+          <div className="mt-8 grid gap-5 lg:grid-cols-5">
+            {/* Column 1 — Immediate Action (60%) */}
+            <div className="lg:col-span-3">
+              <Reveal>
+                <p className="font-ui text-[11px] font-semibold uppercase tracking-widest text-slate-body">
+                  Immediate action
                 </p>
-                <span className="mt-6 inline-flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-teal-brand">
-                  Open sign in
-                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
-                </span>
+                <h3 className="mt-1 font-display text-xl font-medium tracking-tight text-slate-ink">
+                  Need Immediate Help or Work?
+                </h3>
+              </Reveal>
+              <div className="mt-4 grid gap-4">
+                <Reveal>
+                  <Link
+                    href="/live"
+                    className="group flex items-center gap-4 rounded-2xl border border-line bg-canvas p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-slate-ink active:scale-[0.98] sm:p-6"
+                  >
+                    <span className="grid size-12 shrink-0 place-items-center rounded-full bg-alert text-white">
+                      <LifeBuoy size={20} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-display text-xl font-medium tracking-tight text-slate-ink">
+                        I Need Relief
+                      </span>
+                      <span className="mt-0.5 block text-sm leading-6 text-slate-body">
+                        Find who responds near you, with live tracking of
+                        relief reaching your district.
+                      </span>
+                    </span>
+                    <ArrowRight
+                      size={18}
+                      className="shrink-0 text-slate-body transition-transform group-hover:translate-x-1 group-hover:text-slate-ink"
+                    />
+                  </Link>
+                </Reveal>
+                <Reveal delay={80}>
+                  <Link
+                    href="/disasters"
+                    className="group flex items-center gap-4 rounded-2xl border border-line bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-slate-ink active:scale-[0.98] sm:p-6"
+                  >
+                    <span className="grid size-12 shrink-0 place-items-center rounded-full bg-teal-brand text-white">
+                      <Compass size={20} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-display text-xl font-medium tracking-tight text-slate-ink">
+                        Explore Live Disasters
+                      </span>
+                      <span className="mt-0.5 block text-sm leading-6 text-slate-body">
+                        {active.length} active registers on the map — what&rsquo;s
+                        unfolding, right now.
+                      </span>
+                    </span>
+                    <ArrowRight
+                      size={18}
+                      className="shrink-0 text-slate-body transition-transform group-hover:translate-x-1 group-hover:text-slate-ink"
+                    />
+                  </Link>
+                </Reveal>
+                <Reveal delay={140}>
+                  <Link
+                    href="/tenders"
+                    className="group flex items-center gap-4 rounded-2xl border border-line bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-slate-ink active:scale-[0.98] sm:p-6"
+                  >
+                    <span className="grid size-12 shrink-0 place-items-center rounded-full bg-slate-ink text-white">
+                      <HandCoins size={20} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-display text-xl font-medium tracking-tight text-slate-ink">
+                        Claim Open Tenders
+                      </span>
+                      <span className="mt-0.5 block text-sm leading-6 text-slate-body">
+                        {openTenders.length} open relief jobs — food, boats,
+                        shelters, logistics.
+                      </span>
+                    </span>
+                    <ArrowRight
+                      size={18}
+                      className="shrink-0 text-slate-body transition-transform group-hover:translate-x-1 group-hover:text-slate-ink"
+                    />
+                  </Link>
+                </Reveal>
+              </div>
+            </div>
+
+            {/* Column 2 — Network & Support (40%) */}
+            <div className="lg:col-span-2">
+              <Reveal delay={100}>
+                <p className="font-ui text-[11px] font-semibold uppercase tracking-widest text-slate-body">
+                  Network & support
+                </p>
+                <h3 className="mt-1 font-display text-xl font-medium tracking-tight text-slate-ink">
+                  Join or Support
+                </h3>
+              </Reveal>
+              <div className="mt-4 grid gap-4">
+                <Reveal delay={160}>
+                  <Link
+                    href="/register"
+                    className="group block rounded-2xl border border-slate-ink bg-slate-ink p-6 text-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 active:scale-[0.98] sm:p-7"
+                  >
+                    <Building2 size={22} className="text-white/80" />
+                    <span className="mt-4 block font-display text-2xl font-medium tracking-tight">
+                      Register Organisation
+                    </span>
+                    <span className="mt-1 block text-sm leading-6 text-white/70">
+                      NGO, responder or authority — verified in ~48 hours.
+                      Takes 4 minutes.
+                    </span>
+                    <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-white">
+                      Start registration
+                      <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </Link>
+                </Reveal>
+                <Reveal delay={220}>
+                  <Link
+                    href="/donate"
+                    className="group block rounded-2xl border border-line bg-teal-tint p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-teal-brand active:scale-[0.98] sm:p-7"
+                  >
+                    <HeartHandshake size={22} className="text-teal-brand" />
+                    <span className="mt-4 block font-display text-2xl font-medium tracking-tight text-slate-ink">
+                      Donate <span className="font-mono text-base text-teal-brand">(₹0 Fee)</span>
+                    </span>
+                    <span className="mt-1 block text-sm leading-6 text-slate-body">
+                      Every rupee on a public ledger. No commission, full
+                      traceability.
+                    </span>
+                    <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-teal-brand">
+                      Give today
+                      <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </Link>
+                </Reveal>
+              </div>
+            </div>
+          </div>
+
+          {/* Subtle link bar — Know Nature + mission */}
+          <Reveal delay={120}>
+            <p className="mt-8 border-t border-line pt-5 text-center text-sm leading-6 text-slate-body">
+              New here?{" "}
+              <Link href="/learn" className="text-slate-ink underline underline-offset-4 hover:text-teal-brand">
+                Learn about disaster resilience
+              </Link>{" "}
+              or{" "}
+              <Link href="/about" className="text-slate-ink underline underline-offset-4 hover:text-teal-brand">
+                read our mission →
               </Link>
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============ FEATURED LIVE EMERGENCY — one story, full context ============ */}
+      {featured && (
+        <section id="featured" className="bg-canvas">
+          <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16">
+            <Reveal>
+              <Kicker>Live right now · Featured emergency</Kicker>
+              <h2 className="mt-3 max-w-2xl font-display text-3xl font-medium leading-tight tracking-tight text-slate-ink sm:text-4xl">
+                What nature can cause — and where help is needed today.
+              </h2>
             </Reveal>
+
+            <Reveal delay={100}>
+              <article className="mt-8 overflow-hidden rounded-2xl border border-line bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+                <div className="grid md:grid-cols-2">
+                  <div className="border-b border-line bg-slate-ink p-7 text-white sm:p-9 md:border-b-0 md:border-r">
+                    <p className="flex flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-alert px-3 py-1 font-ui text-[10px] font-semibold uppercase tracking-widest text-white">
+                        <span className="live-dot inline-block size-1.5 rounded-full bg-white" />
+                        {featured.severity}
+                      </span>
+                      <span className="rounded-full border border-white/25 px-3 py-1 font-ui text-[10px] font-semibold uppercase tracking-widest text-white/80">
+                        {featured.type}
+                      </span>
+                    </p>
+                    <p className="mt-5 font-mono text-[11px] uppercase tracking-widest text-white/60">
+                      {featured.region}, {featured.state}
+                    </p>
+                    <h3 className="mt-2 font-display text-3xl font-medium leading-tight tracking-tight text-white sm:text-4xl">
+                      {featured.title}
+                    </h3>
+                    <p className="mt-4 max-w-md text-[15px] leading-7 text-white/75">
+                      {featured.summary}
+                    </p>
+                    <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3 border-t border-white/15 pt-5">
+                      <p>
+                        <span className="block font-mono text-2xl font-semibold tracking-tight text-white">
+                          {featured.affected.toLocaleString("en-IN")}
+                        </span>
+                        <span className="mt-1 block font-ui text-[10px] uppercase tracking-widest text-white/60">
+                          People affected
+                        </span>
+                      </p>
+                      <p>
+                        <span className="block font-mono text-2xl font-semibold tracking-tight text-white">
+                          {new Date(featured.reportedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+                        </span>
+                        <span className="mt-1 block font-ui text-[10px] uppercase tracking-widest text-white/60">
+                          Reported · IST
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col justify-center p-7 sm:p-9">
+                    <p className="flex items-center gap-2 font-ui text-[11px] font-semibold uppercase tracking-widest text-slate-body">
+                      <TriangleAlert size={14} className="text-alert" />
+                      What&rsquo;s needed
+                    </p>
+                    <ul className="mt-3 space-y-2.5 text-[15px] leading-7 text-slate-ink">
+                      <li className="flex gap-2.5">
+                        <span className="text-teal-brand">—</span>
+                        Rescue boats with trained crews on the water now
+                      </li>
+                      <li className="flex gap-2.5">
+                        <span className="text-teal-brand">—</span>
+                        Daily food packets for {featured.affected.toLocaleString("en-IN")} people in relief camps
+                      </li>
+                      <li className="flex gap-2.5">
+                        <span className="text-teal-brand">—</span>
+                        Drinking water, ORS kits & medical triage at camp sites
+                      </li>
+                    </ul>
+                    <div className="mt-7 flex flex-wrap gap-3">
+                      <PrimaryCTA href="/impact">
+                        View All Active Disaster Registers ({active.length})
+                        <ArrowUpRight size={15} className="ml-2" />
+                      </PrimaryCTA>
+                    </div>
+                    <p className="mt-4 font-mono text-[11px] tracking-wide text-slate-body">
+                      Helpline for this region: 112 · NDMA 1078
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </Reveal>
+          </div>
+        </section>
+      )}
+
+      {/* ============ SIGN IN — with maintenance notice ============ */}
+      <section id="signin" className="border-t border-line bg-surface">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16">
+          <Reveal>
+            <Kicker>Sign in to see everything</Kicker>
+            <h2 className="mt-3 max-w-2xl font-display text-3xl font-medium leading-tight tracking-tight text-slate-ink sm:text-4xl">
+              Your chain is one sign-in away.
+            </h2>
+            <p className="mt-3 max-w-2xl text-[15px] leading-7 text-slate-body">
+              One account opens your path picker, the live map, tenders and
+              the public funds ledger.
+            </p>
+          </Reveal>
+
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
+            <Reveal>
+              <div className="flex h-full flex-col rounded-2xl border border-line bg-white p-7 shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:p-8">
+                <p className="rounded-xl border border-warn/30 bg-warn-tint px-4 py-3 text-sm leading-6 text-slate-ink">
+                  <span className="font-ui text-[11px] font-semibold uppercase tracking-widest text-warn">
+                    Notice&nbsp;·&nbsp;
+                  </span>
+                  Google One-Tap Login is currently under maintenance.
+                  Please use Email / Passwordless Magic Link to sign in.
+                </p>
+                <h3 className="mt-5 font-display text-2xl font-medium tracking-tight text-slate-ink">
+                  Sign in with email
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-body">
+                  Password or magic link — then pick your path and explore
+                  impact, tenders and lessons.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <PrimaryCTA href="/login">Open sign in</PrimaryCTA>
+                  <Link
+                    href="/start"
+                    className="inline-flex h-12 items-center rounded-full border border-line-strong bg-white px-7 font-ui text-xs font-semibold uppercase tracking-widest text-slate-ink transition-all hover:-translate-y-0.5 hover:border-slate-ink active:scale-[0.98]"
+                  >
+                    Explore without signing in
+                  </Link>
+                </div>
+                <p className="mt-5 font-mono text-[11px] tracking-wide text-slate-body">
+                  Prefer onboarding first?{" "}
+                  <Link href="/register" className="text-slate-ink underline underline-offset-4">
+                    Register an organisation
+                  </Link>
+                </p>
+              </div>
+            </Reveal>
+
             <Reveal delay={110}>
               <Link
-                href="/signup"
-                className="lift group flex h-full flex-col rounded-2xl border border-espresso bg-espresso p-7 text-bone sm:p-9"
+                href="/government"
+                className="group flex h-full flex-col justify-between rounded-2xl border border-slate-ink bg-slate-ink p-7 text-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 active:scale-[0.98] sm:p-8"
               >
-                <div className="flex items-center justify-between">
-                  <p className="flex items-center gap-2 font-ui text-[11px] uppercase tracking-widest text-bone/60">
-                    <span className="inline-block size-1.5 rounded-full bg-warn" />
-                    Entry · new here
-                  </p>
-                  <span className="grid size-10 place-items-center rounded-full bg-bone/10 text-bone transition-all duration-300 group-hover:bg-teal-brand group-hover:text-white">
-                    <UserPlus size={17} />
+                <span>
+                  <span className="block font-ui text-[11px] font-semibold uppercase tracking-widest text-white/60">
+                    For districts, states & institutions
                   </span>
-                </div>
-                <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight">
-                  Create an account
-                </h2>
-                <p className="mt-2 max-w-md text-[15px] leading-7 text-bone/70">
-                  Under a minute with Google or email, then register your
-                  organisation for verification.
-                </p>
-                <span className="mt-6 inline-flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-warn">
-                  Start signup
-                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                  <span className="mt-3 block font-display text-3xl font-medium leading-tight tracking-tight">
+                    Deploy ReliefChain as public infrastructure.
+                  </span>
+                  <span className="mt-2 block text-sm leading-6 text-white/70">
+                    Verified network · auditable funds · 30-day pilot with
+                    an evidence pack.
+                  </span>
+                </span>
+                <span className="mt-6 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-6 py-3 font-ui text-[11px] font-semibold uppercase tracking-widest text-slate-ink transition-transform group-hover:translate-x-1">
+                  Buyer page <ArrowRight size={14} />
                 </span>
               </Link>
             </Reveal>
           </div>
         </div>
-      </section>
-
-      {/* ============ FOR GOVERNMENTS ============ */}
-      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
-        <Reveal>
-          <Link
-            href="/government"
-            className="lift group flex flex-col gap-4 overflow-hidden rounded-2xl border border-espresso bg-espresso p-7 text-bone sm:flex-row sm:items-center sm:p-8"
-          >
-            <span className="grid size-12 shrink-0 place-items-center rounded-full bg-bone/10 text-warn">
-              <Landmark size={21} />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block font-ui text-[11px] font-semibold uppercase tracking-widest text-bone/60">
-                For districts, states & institutions
-              </span>
-              <span className="mt-1 block font-display text-2xl font-bold tracking-tight">
-                Deploy ReliefChain as public infrastructure.
-              </span>
-              <span className="mt-1 block text-sm text-bone/70">
-                Verified network · auditable funds · 30-day pilot with an evidence pack.
-              </span>
-            </span>
-            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-bone px-6 py-3 font-ui text-[11px] font-semibold uppercase tracking-widest text-espresso transition-transform group-hover:translate-x-1">
-              Buyer page <ArrowRight size={14} />
-            </span>
-          </Link>
-        </Reveal>
-      </section>
-
-      {/* ============ CTA BAND ============ */}
-      <section className="bg-canvas px-3 pb-3 sm:px-5 sm:pb-5">
-        <Reveal scale>
-          <div className="grain relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-teal-brand text-white">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(60% 120% at 85% 10%,rgba(255,190,120,0.35),transparent 60%),radial-gradient(50% 100% at 0% 100%,rgba(0,0,0,0.4),transparent 60%)",
-              }}
-            />
-            <p
-              aria-hidden
-              className="ghost-type pointer-events-none absolute -top-6 right-0 z-[1] select-none whitespace-nowrap font-display text-[18vw] font-bold leading-none text-white lg:text-[13rem]"
-            >
-              JOIN
-            </p>
-            <div className="relative z-[2] flex flex-col items-start gap-7 px-6 py-14 sm:px-12 lg:flex-row lg:items-center lg:justify-between lg:px-16 lg:py-16">
-              <div>
-                <p className="flex items-center gap-2 font-ui text-[11px] uppercase tracking-widest text-white/70">
-                  <span className="inline-block size-1.5 rounded-full bg-white" />
-                  Registration
-                </p>
-                <h2 className="mt-3 max-w-xl font-display text-3xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
-                  Your organisation belongs on the chain.
-                </h2>
-                <p className="mt-3 max-w-xl text-[15px] leading-7 text-white/80">
-                  Registration takes 4 minutes. Verification is manual,
-                  document-backed and usually clears within 48 hours.
-                </p>
-              </div>
-              <div className="flex shrink-0 flex-wrap gap-3">
-                <Link
-                  href="/register"
-                  className="inline-flex h-12 items-center rounded-full bg-white px-7 font-ui text-xs font-semibold uppercase tracking-widest text-espresso shadow-[0_14px_36px_rgba(0,0,0,0.3)] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_48px_rgba(0,0,0,0.35)]"
-                >
-                  Register your organisation
-                  <ArrowRight size={15} className="ml-2" />
-                </Link>
-                <Link
-                  href="/donate"
-                  className="inline-flex h-12 items-center rounded-full border border-white/40 px-7 font-ui text-xs font-semibold uppercase tracking-widest text-white transition-all hover:-translate-y-0.5 hover:bg-white/10"
-                >
-                  Donate →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Reveal>
       </section>
     </>
   );

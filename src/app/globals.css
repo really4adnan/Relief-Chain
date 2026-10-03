@@ -1,46 +1,45 @@
 @import "tailwindcss";
 
 @theme {
-  /* Voices-inspired humanitarian palette.
-      Bone canvas, warm-paper surfaces, espresso ink, ember primary,
-      umber secondary. Token NAMES are unchanged so every page re-skins. */
-  --color-canvas: #e4e3d3;
-  --color-surface: #fbfaf3;
-  --color-line: #d8d4bd;
-  --color-line-strong: #b3ad93;
-  --color-slate-ink: #1b0b07;
-  --color-slate-body: #5f4b3b;
+  /* Humanitarian editorial palette — organic, high-contrast, calm.
+     Off-white canvas, charcoal ink, forest action, terracotta urgency.
+     Token NAMES are unchanged so every page re-skins. */
+  --color-canvas: #f8f7f4;
+  --color-surface: #ffffff;
+  --color-line: #e5e2d9;
+  --color-line-strong: #cfc9b8;
+  --color-slate-ink: #1a1d1e;
+  --color-slate-body: #4b5250;
 
-  --color-teal-brand: #942702;
-  --color-teal-brand-hover: #7a2002;
-  --color-teal-tint: #f9e9dc;
+  --color-teal-brand: #2e5a44;
+  --color-teal-brand-hover: #234636;
+  --color-teal-tint: #e8efe9;
 
-  --color-alert: #b3231a;
-  --color-alert-tint: #fdecea;
+  --color-alert: #c84b31;
+  --color-alert-tint: #fbeee8;
   --color-warn: #b45309;
   --color-warn-tint: #fdf3e3;
-  --color-ok: #4d7c0f;
-  --color-ok-tint: #f0f7e0;
+  --color-ok: #2e5a44;
+  --color-ok-tint: #e8efe9;
 
-  /* New expressive tokens */
-  --color-ember: #942702;
-  --color-ember-deep: #5c1a02;
-  --color-umber: #664236;
-  --color-bone: #e1e2d4;
-  --color-sand: #efead6;
-  --color-espresso: #1b0b07;
+  /* Expressive tokens — repointed to the editorial scheme */
+  --color-ember: #c84b31;
+  --color-ember-deep: #99371f;
+  --color-umber: #2e5a44;
+  --color-bone: #f8f7f4;
+  --color-sand: #efeadf;
+  --color-espresso: #1a1d1e;
 
-  /* Human font pack — one face, one crisis job.
-     alert:   Archivo Black/SemiBold — sirens, banners, evacuation orders
-     display: Plus Jakarta Sans Bold/XBold — page + section headings
-     sans:    Open Sans Regular/Medium — body copy, guides, instructions
-     ui:      Inter Medium/SemiBold — buttons, nav, labels, filters
-     mono:    IBM Plex Mono Regular/Medium — coords, timers, ledger */
-  --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-jakarta), var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-alert: var(--font-archivo), var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
-  --font-ui: var(--font-inter), var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+  /* Editorial humanist type — one face, one job.
+     display: Newsreader serif — warm, human-crafted headlines
+     sans:    Plus Jakarta Sans — body copy, guides, instructions
+     ui:      Plus Jakarta Sans / Inter — buttons, nav, labels
+     mono:    JetBrains Mono — timestamps, helplines, live stats */
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-alert: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-ui: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
 
   /* Warm, human geometry — soft rounds everywhere. rounded-full
       (dots, pills, avatars) still rounds fully. */
@@ -91,13 +90,13 @@ body {
 
 .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 
 .font-alert {
   font-family: var(--font-alert);
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 
 .font-ui {
@@ -108,9 +107,10 @@ body {
 h1, h2, h3, .type-headline {
   font-family: var(--font-display);
   color: var(--color-slate-ink);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   text-wrap: balance;
   overflow-wrap: break-word;
+  font-weight: 500;
 }
 
 /* Critical alert headline — siren-level, used sparingly */
@@ -556,7 +556,7 @@ button[class*="bg-teal-brand"]:active {
   transform: scale(1.05);
 }
 
-/* Warm card lift */
+/* Warm card lift — soft, non-glowing, paper-like */
 .lift {
   transition:
     transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -565,9 +565,18 @@ button[class*="bg-teal-brand"]:active {
 }
 
 .lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 44px rgba(27, 11, 7, 0.14);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 12px 28px rgba(26, 29, 30, 0.07);
   border-color: var(--color-line-strong);
+}
+
+/* Editorial buttons — calm press feedback, no neon, no glow */
+.btn-press {
+  transition: transform 120ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.btn-press:active {
+  transform: scale(0.98);
 }
 
 /* Ember CTA sweep */
