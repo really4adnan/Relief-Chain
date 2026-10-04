@@ -14,11 +14,10 @@ export default async function AdminLayout({
   const authorized = await isAdmin();
 
   if (!authorized) {
+    const isProd = process.env.NODE_ENV === "production";
     const hint =
-      process.env.NODE_ENV !== "production" && !process.env.ADMIN_PASSCODE
-        ? "reliefchain-dev"
-        : null;
-    return <AdminLogin hint={hint} />;
+      !isProd && !process.env.ADMIN_PASSCODE ? "reliefchain-dev" : null;
+    return <AdminLogin hint={hint} configured={!!process.env.ADMIN_PASSCODE} />;
   }
 
   return (

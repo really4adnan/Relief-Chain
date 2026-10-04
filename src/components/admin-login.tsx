@@ -4,7 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Logo } from "./logo";
 
-export function AdminLogin({ hint }: { hint?: string | null }) {
+export function AdminLogin({
+  hint,
+  configured = true,
+}: {
+  hint?: string | null;
+  configured?: boolean;
+}) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -81,10 +87,18 @@ export function AdminLogin({ hint }: { hint?: string | null }) {
             Set your own before going live.
           </p>
         )}
-        {!hint && (
+        {!hint && !configured && (
+          <p className="mt-4 border border-alert/40 bg-alert-tint px-3 py-2 text-xs leading-5 text-slate-ink">
+            Admin access isn&apos;t enabled on this deployment yet — set{" "}
+            <span className="font-mono">ADMIN_PASSCODE</span> (and{" "}
+            <span className="font-mono">ADMIN_SESSION_SECRET</span>) in the
+            host&apos;s environment variables, then redeploy.
+          </p>
+        )}
+        {!hint && configured && (
           <p className="mt-4 text-xs leading-5 text-slate-body">
-            Set <span className="font-mono">ADMIN_PASSCODE</span> in{" "}
-            <span className="font-mono">.env.local</span> to enable the panel.
+            Enter the passcode configured as{" "}
+            <span className="font-mono">ADMIN_PASSCODE</span> on this host.
           </p>
         )}
       </div>
