@@ -36,7 +36,7 @@ export default function StartPage() {
               What do you want to do?
             </p>
             <h1 className="hero-in hero-in-3 mt-4 max-w-3xl font-display text-4xl font-semibold leading-[1.02] tracking-tight sm:text-6xl">
-              Why are you <em className="gradient-text not-italic">here?</em>
+              Why are you <em className="text-amber-200 not-italic">here?</em>
             </h1>
             <p className="hero-in hero-in-4 mt-4 max-w-xl text-base leading-7 text-bone/75 sm:text-lg">
               <Typewriter

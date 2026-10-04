@@ -20,36 +20,45 @@ import { Reveal } from "@/components/motion";
 
 export const intents = [
   {
-    slug: "explore",
-    icon: Compass,
-    title: "Explore disasters",
-    desc: "See live emergencies across India on the map and register.",
-    href: "/disasters",
-    tint: "bg-teal-tint text-teal-brand",
-  },
-  {
     slug: "help",
     icon: LifeBuoy,
-    title: "I need help",
-    desc: "Find who responds near you + live tracking of relief.",
+    title: "I need emergency help",
+    desc: "Urgent help first — relief camps, rescue crews and live tracking of aid reaching your district.",
     href: "/live",
     tint: "bg-alert-tint text-alert",
+    featured: true,
   },
   {
     slug: "tender",
     icon: HandCoins,
-    title: "Get a tender",
-    desc: "Claim open relief work — food, boats, shelters, logistics.",
+    title: "Live relief tenders",
+    desc: "Open procurement portal for verified vendors.",
     href: "/tenders",
     tint: "bg-ok-tint text-ok",
   },
   {
     slug: "register",
     icon: Building2,
-    title: "Register organisation",
-    desc: "NGO / PWD / authority — get verified in ~48 hours.",
+    title: "NGO & partner registration",
+    desc: "Onboarding portal for ground teams — verified in ~48 hours.",
     href: "/register",
     tint: "bg-warn-tint text-warn",
+  },
+  {
+    slug: "study",
+    icon: GraduationCap,
+    title: "NDMA safety drills",
+    desc: "Bite-sized, offline-first survival protocols. Free forever.",
+    href: "/learn#ndma-drills",
+    tint: "bg-warn-tint text-warn",
+  },
+  {
+    slug: "explore",
+    icon: Compass,
+    title: "Explore disasters",
+    desc: "See live emergencies across India on the map and register.",
+    href: "/disasters",
+    tint: "bg-teal-tint text-teal-brand",
   },
   {
     slug: "donate",
@@ -60,20 +69,13 @@ export const intents = [
     tint: "bg-teal-tint text-teal-brand",
   },
   {
-    slug: "study",
-    icon: GraduationCap,
-    title: "Know nature",
-    desc: "Know why disasters happen & how to resist them.",
-    href: "/learn",
-    tint: "bg-warn-tint text-warn",
-  },
-  {
     slug: "other",
     icon: Sparkles,
     title: "Just looking around",
     desc: "See what nature can cause + how ReliefChain helps.",
     href: "/impact",
     tint: "bg-canvas text-slate-ink",
+    wide: true,
   },
 ];
 
@@ -193,29 +195,47 @@ export function Tilt({ children, className = "" }: { children: ReactNode; classN
 
 export function IntentGrid({ compact = false }: { compact?: boolean }) {
   return (
-    <div className={`grid gap-4 ${compact ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}>
-      {intents.map((it, i) => (
-        <Reveal key={it.slug} delay={(i % 4) * 90}>
-          <Tilt className="h-full">
-            <Link
-              href={it.href}
-              className="lift group flex h-full flex-col rounded-2xl border border-line bg-surface p-6"
-            >
-              <span className={`grid size-12 place-items-center rounded-full ${it.tint} transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6`}>
-                <it.icon size={21} />
-              </span>
-              <h3 className="mt-4 font-display text-xl font-semibold tracking-tight text-slate-ink">
-                {it.title}
-              </h3>
-              <p className="mt-1.5 flex-1 text-sm leading-6 text-slate-body">{it.desc}</p>
-              <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-teal-brand">
-                Go
-                <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-          </Tilt>
-        </Reveal>
-      ))}
+    <div className={`grid gap-4 ${compact ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
+      {intents.map((it, i) => {
+        const span =
+          !compact && "featured" in it && it.featured
+            ? "sm:col-span-2 lg:col-span-2"
+            : !compact && "wide" in it && it.wide
+              ? "sm:col-span-2"
+              : "";
+        return (
+          <Reveal key={it.slug} delay={(i % 4) * 90} className={span}>
+            <Tilt className="h-full">
+              <Link
+                href={it.href}
+                className={`lift group flex h-full flex-col rounded-2xl border bg-surface p-6 ${
+                  "featured" in it && it.featured
+                    ? "border-alert/40 shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:p-8"
+                    : "border-line"
+                }`}
+              >
+                {"featured" in it && it.featured && (
+                  <span className="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-alert px-3 py-1 font-mono text-[11px] font-medium tracking-wide text-white">
+                    <span className="live-dot inline-block size-1.5 rounded-full bg-white" />
+                    Urgent · open to all
+                  </span>
+                )}
+                <span className={`grid size-12 place-items-center rounded-full ${it.tint} transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6`}>
+                  <it.icon size={21} />
+                </span>
+                <h3 className={`mt-4 font-display font-semibold tracking-tight text-slate-ink ${"featured" in it && it.featured ? "text-2xl sm:text-3xl" : "text-xl"}`}>
+                  {it.title}
+                </h3>
+                <p className="mt-1.5 flex-1 text-sm leading-6 text-slate-body">{it.desc}</p>
+                <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-teal-brand">
+                  Go
+                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
+            </Tilt>
+          </Reveal>
+        );
+      })}
     </div>
   );
 }

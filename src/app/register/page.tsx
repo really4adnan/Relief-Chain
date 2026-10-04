@@ -4,11 +4,12 @@ import { useState } from "react";
 import { Lock } from "lucide-react";
 import { INDIA_STATES, orgRegistrationSchema } from "@/lib/validation";
 import { RequireAuth } from "@/components/require-auth";
+import { LowBandwidthNote } from "@/components/ui";
 
 const kinds = ["NGO", "PWD Company", "Government Body", "Volunteer Group"] as const;
 
 const field =
-  "h-11 w-full rounded border border-line bg-surface px-3 text-sm text-slate-ink placeholder:text-slate-body/70 focus:border-teal-brand";
+  "h-12 min-h-[48px] w-full rounded border border-line bg-surface px-3 text-sm text-slate-ink placeholder:text-slate-body/70 focus:border-teal-brand";
 
 export default function RegisterPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -245,6 +246,7 @@ export default function RegisterPage() {
               email you once verification is complete.
             </div>
           )}
+          <LowBandwidthNote />
         </form>
 
         <aside className="space-y-4">

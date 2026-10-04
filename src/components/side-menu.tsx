@@ -102,7 +102,7 @@ export function SideMenu() {
         aria-label="Open site menu"
         aria-expanded={open}
         aria-controls="site-menu-tab"
-        className="grid size-11 shrink-0 place-items-center rounded-full border border-line-strong bg-surface text-slate-ink transition-all hover:-translate-y-0.5 hover:border-slate-ink sm:inline-flex sm:h-11 sm:w-auto sm:gap-2 sm:px-4 sm:font-ui sm:text-[11px] sm:font-semibold sm:uppercase sm:tracking-widest"
+        className="grid size-12 shrink-0 place-items-center rounded-full border border-line-strong bg-surface text-slate-ink transition-all hover:-translate-y-0.5 hover:border-slate-ink sm:inline-flex sm:h-12 sm:w-auto sm:gap-2 sm:px-4 sm:font-ui sm:text-[11px] sm:font-semibold sm:uppercase sm:tracking-widest"
       >
         <Menu size={18} aria-hidden="true" />
         <span className="hidden sm:inline">Menu</span>

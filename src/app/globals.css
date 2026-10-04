@@ -1,42 +1,50 @@
 @import "tailwindcss";
 
 @theme {
-  /* Humanitarian editorial palette — organic, high-contrast, calm.
-     Off-white canvas, charcoal ink, forest action, terracotta urgency.
-     Token NAMES are unchanged so every page re-skins. */
-  --color-canvas: #f8f7f4;
+  /* ReliefChain spec palette — warm light canvas, deep slate ink,
+      forest-green action, terracotta urgency. No dark purple/neon.
+      Token NAMES are unchanged so every page re-skins. */
+  --color-canvas: #f9f8f6;
   --color-surface: #ffffff;
-  --color-line: #e5e2d9;
+  --color-line: #e6e3dc;
   --color-line-strong: #cfc9b8;
-  --color-slate-ink: #1a1d1e;
-  --color-slate-body: #4b5250;
+  --color-slate-ink: #181a1b;
+  --color-slate-body: #52585e;
 
-  --color-teal-brand: #2e5a44;
-  --color-teal-brand-hover: #234636;
-  --color-teal-tint: #e8efe9;
+  --color-teal-brand: #1b4332;
+  --color-teal-brand-hover: #143327;
+  --color-teal-tint: #e7efe9;
 
-  --color-alert: #c84b31;
-  --color-alert-tint: #fbeee8;
-  --color-warn: #b45309;
-  --color-warn-tint: #fdf3e3;
-  --color-ok: #2e5a44;
-  --color-ok-tint: #e8efe9;
+  --color-alert: #c83b2b;
+  --color-alert-tint: #fdeeea;
+  --color-warn: #9a3412;
+  --color-warn-tint: #ffedd5;
+  --color-ok: #1b4332;
+  --color-ok-tint: #e7efe9;
 
-  /* Expressive tokens — repointed to the editorial scheme */
-  --color-ember: #c84b31;
-  --color-ember-deep: #99371f;
-  --color-umber: #2e5a44;
-  --color-bone: #f8f7f4;
+  /* NDMA escalation badges (monospace) — exact spec tones */
+  --color-l1-bg: #fef3c7;
+  --color-l1-text: #92400e;
+  --color-l2-bg: #ffedd5;
+  --color-l2-text: #9a3412;
+  --color-l3-bg: #fee2e2;
+  --color-l3-text: #991b1b;
+
+  /* Expressive tokens — repointed to the spec scheme */
+  --color-ember: #c83b2b;
+  --color-ember-deep: #991b1b;
+  --color-umber: #1b4332;
+  --color-bone: #f9f8f6;
   --color-sand: #efeadf;
-  --color-espresso: #1a1d1e;
+  --color-espresso: #181a1b;
 
-  /* Editorial humanist type — one face, one job.
-     display: Newsreader serif — warm, human-crafted headlines
+  /* Type — one face, one job.
+     display: Fraunces serif 600/700 — hero, card titles, section heads
      sans:    Plus Jakarta Sans — body copy, guides, instructions
-     ui:      Plus Jakarta Sans / Inter — buttons, nav, labels
-     mono:    JetBrains Mono — timestamps, helplines, live stats */
+     ui:      Plus Jakarta Sans — buttons, nav, labels
+     mono:    JetBrains Mono 500 — tickers, timestamps, helplines, metrics */
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
   --font-alert: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-ui: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
@@ -74,17 +82,13 @@ body {
 }
 
 /* ============ Crisis typography hierarchy ============
-   1. ALERTS (Archivo 900/600): red banners, evacuation orders,
-      siren-level headers. Condensed punch, open counters —
-      more words per mobile line, legible through smoke/glare.
-   2. HEADINGS (Plus Jakarta Sans 700/800): page + section titles.
-      Warm geometric curves — authority without cold sterility.
-   3. BODY (Open Sans 400/500): guides, updates, instructions.
-      Tall x-height + open letterforms — tireless stressed reading.
-   4. UI (Inter 500/600): buttons, nav, form labels, filters.
-      Engineered micro-text — I/l/1 never confused on vital taps.
-   5. DATA (IBM Plex Mono 400/500): coords, timers, capacities,
-      ledger. Fixed width — live numbers never jump on refresh.
+   1. DISPLAY (Fraunces 600/700): hero, card titles, section heads.
+      Editorial serif — tight leading, human-crafted warmth.
+   2. BODY + UI (Plus Jakarta Sans 400/500/600): guides, updates,
+      buttons, nav, form labels. Generous 1.65–1.7 leading for
+      stressed reading; slate #52585E on canvas clears WCAG AAA.
+   3. DATA (JetBrains Mono 500): tickers, coords, timers, capacities,
+      ledger, helplines. Fixed width — live numbers never jump.
    Sentence case everywhere — never all-caps paragraphs (caps cut
    reading speed ~15% under stress). */
 
@@ -110,7 +114,7 @@ h1, h2, h3, .type-headline {
   letter-spacing: -0.015em;
   text-wrap: balance;
   overflow-wrap: break-word;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Critical alert headline — siren-level, used sparingly */
@@ -175,6 +179,36 @@ textarea {
 :focus-visible {
   outline: 2px solid var(--color-teal-brand);
   outline-offset: 2px;
+}
+
+/* ============ Touch targets & tactile press (WCAG 2.5.8) ============
+   Every button and CTA link clears 48px; icon-only round buttons also
+   clear 48px wide. Inline text links are untouched.
+   Tactile pattern: hover lifts -2px, press scales to 0.98. */
+button,
+a[class*="inline-flex"] {
+  min-height: 48px;
+}
+
+button[class*="size-"],
+a[class*="size-"] {
+  min-width: 48px;
+}
+
+.pressable {
+  transition:
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.pressable:hover {
+  transform: translateY(-2px);
+}
+
+.pressable:active {
+  transform: translateY(0) scale(0.98);
 }
 
 /* Signature: mono kicker + blinking caret */

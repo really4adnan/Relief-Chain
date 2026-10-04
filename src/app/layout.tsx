@@ -3,20 +3,20 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CookieBanner } from "@/components/cookie-banner";
-/* Editorial humanist type — warm serif headlines, Jakarta UI,
-   JetBrains Mono for timestamps, helplines & live stats.
+/* Editorial humanist type — Fraunces serif headlines, Jakarta body,
+   JetBrains Mono for tickers, timestamps, helplines & live stats.
    Only the listed weights load, subsets latin, display=swap. */
 import {
+  Fraunces,
   JetBrains_Mono,
-  Newsreader,
   Plus_Jakarta_Sans,
 } from "next/font/google";
 
-/* Headings H1/H2 — editorial serif, human-crafted warmth. */
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
+/* Headings H1/H2 + card titles — editorial serif, human-crafted warmth. */
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["600", "700"],
   style: ["normal", "italic"],
   display: "swap",
 });
@@ -29,11 +29,11 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-/* Emergency timestamps, helplines (112, NDMA 1078) & live stats. */
+/* Emergency timestamps, tickers, helplines (112, NDMA 1078) & live stats. */
 const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["500", "600"],
   display: "swap",
 });
 
@@ -83,7 +83,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${newsreader.variable} ${jakarta.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${jakarta.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <a

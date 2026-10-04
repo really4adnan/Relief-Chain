@@ -2,18 +2,15 @@ import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
-  Building2,
-  Compass,
-  HandCoins,
-  HeartHandshake,
-  LifeBuoy,
   Phone,
   TriangleAlert,
 } from "lucide-react";
 import { AlertTicker } from "@/components/alert-ticker";
+import { BentoPaths } from "@/components/bento-paths";
 import { NdmaLevelBadge } from "@/components/ndma-badge";
 import { Reveal } from "@/components/motion";
 import { Kicker, PrimaryCTA, SecondaryCTA } from "@/components/ui";
+import { NDMA_DRILLS } from "@/lib/ndma";
 import { getAllDisasters, getAllTenders } from "@/lib/repo";
 
 export default async function Home() {
@@ -36,50 +33,52 @@ export default async function Home() {
     ...new Set(active.slice(0, 6).map((d) => d.state)),
   ].slice(0, 3);
 
+  // Per-state live counts for the bento location toggle — always computed,
+  // never hardcoded, sorted busiest first.
+  const stateCounts = [...active
+    .reduce((m, d) => m.set(d.state, (m.get(d.state) ?? 0) + 1), new Map<string, number>())
+    .entries()]
+    .map(([state, count]) => ({ state, active: count }))
+    .sort((a, b) => b.active - a.active)
+    .slice(0, 8);
+
   return (
     <>
       <AlertTicker />
 
-      {/* ============ HERO — editorial, one line, two doors ============ */}
+      {/* ============ HERO — editorial serif, two doors ============ */}
       <section className="bg-canvas">
         <div className="mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6 sm:pt-20">
           <Reveal>
-            <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-1.5 font-mono text-[11px] font-medium tracking-wide text-slate-ink shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+            <p className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-line bg-surface px-3.5 py-1.5 font-mono text-[11px] font-medium tracking-wide text-slate-ink shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
               <span className="live-dot inline-block size-1.5 rounded-full bg-teal-brand" />
-              Live Data Active&nbsp;&nbsp;|&nbsp;&nbsp;
-              {liveStates.length > 0
-                ? liveStates.join(", ")
-                : "Assam, Odisha & Tamil Nadu"}
-              &nbsp;&nbsp;|&nbsp;&nbsp;NDMA 1078 & 112 Direct Feeds
+              NDMA feed: live
+              <span aria-hidden className="text-slate-body/40">|</span>
+              Active regional nodes: {liveStates.length > 0 ? active.length : 0}
+              {liveStates.length > 0 ? ` (${liveStates.join(", ")})` : ""}
             </p>
           </Reveal>
 
           <Reveal delay={90}>
-            <h1 className="mt-6 max-w-3xl font-display text-4xl font-medium leading-[1.08] tracking-tight text-slate-ink sm:text-6xl">
-              When natural disasters strike,{" "}
-              <em className="text-teal-brand">
-                response shouldn&rsquo;t wait.
-              </em>
+            <h1 className="mt-6 max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-slate-ink sm:text-6xl">
+              When disasters strike, emergency response shouldn&rsquo;t wait.
             </h1>
           </Reveal>
 
           <Reveal delay={160}>
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-body sm:text-lg sm:leading-8">
-              ReliefChain is a verified network of NGOs, responders and
-              government bodies across India — one place to find help,
-              fund relief, or put your organisation on the chain.
+              A decentralized, real-time coordination bridge connecting
+              affected citizens, field NGOs, and NDMA disaster response teams.
             </p>
           </Reveal>
 
           <Reveal delay={220}>
             <div className="mt-8 flex flex-wrap gap-3">
               <PrimaryCTA href="/live">
-                <LifeBuoy size={15} className="mr-2" />
-                Find Emergency Help
+                Request emergency aid
               </PrimaryCTA>
-              <SecondaryCTA href="/register">
-                <Building2 size={15} className="mr-2" />
-                Register Body
+              <SecondaryCTA href="/disasters">
+                View live disaster map
               </SecondaryCTA>
             </div>
           </Reveal>
@@ -99,177 +98,21 @@ export default async function Home() {
               </span>
               <span className="hidden h-3 w-px bg-line-strong sm:block" />
               <span>
-                {active.length} active registers · {openTenders.length} open
-                tenders · ₹0 fee on donations
+                {active.length} active {active.length === 1 ? "register" : "registers"} · {openTenders.length} open{" "}
+                {openTenders.length === 1 ? "tender" : "tenders"} · NDMA feed status: live
               </span>
             </p>
           </Reveal>
         </div>
       </section>
 
-      {/* ============ CHOOSE YOUR PATH — asymmetric 60/40 ============ */}
+      {/* ============ BENTO PATH SELECTION — featured + three rails ============ */}
       <section id="paths" className="border-y border-line bg-surface">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16">
-          <Reveal>
-            <Kicker>Choose your path</Kicker>
-            <h2 className="mt-3 max-w-2xl font-display text-3xl font-medium leading-tight tracking-tight text-slate-ink sm:text-4xl">
-              Two doors. Pick the one that matches your urgency.
-            </h2>
-          </Reveal>
-
-          <div className="mt-8 grid gap-5 lg:grid-cols-5">
-            {/* Column 1 — Immediate Action (60%) */}
-            <div className="lg:col-span-3">
-              <Reveal>
-                <p className="font-ui text-[11px] font-semibold uppercase tracking-widest text-slate-body">
-                  Immediate action
-                </p>
-                <h3 className="mt-1 font-display text-xl font-medium tracking-tight text-slate-ink">
-                  Need Immediate Help or Work?
-                </h3>
-              </Reveal>
-              <div className="mt-4 grid gap-4">
-                <Reveal>
-                  <Link
-                    href="/live"
-                    className="group flex items-center gap-4 rounded-2xl border border-line bg-canvas p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-slate-ink active:scale-[0.98] sm:p-6"
-                  >
-                    <span className="grid size-12 shrink-0 place-items-center rounded-full bg-alert text-white">
-                      <LifeBuoy size={20} />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-display text-xl font-medium tracking-tight text-slate-ink">
-                        I Need Help
-                      </span>
-                      <span className="mt-0.5 block text-sm leading-6 text-slate-body">
-                        Find who responds near you, with live tracking of
-                        relief reaching your district.
-                      </span>
-                    </span>
-                    <ArrowRight
-                      size={18}
-                      className="shrink-0 text-slate-body transition-transform group-hover:translate-x-1 group-hover:text-slate-ink"
-                    />
-                  </Link>
-                </Reveal>
-                <Reveal delay={80}>
-                  <Link
-                    href="/disasters"
-                    className="group flex items-center gap-4 rounded-2xl border border-line bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-slate-ink active:scale-[0.98] sm:p-6"
-                  >
-                    <span className="grid size-12 shrink-0 place-items-center rounded-full bg-teal-brand text-white">
-                      <Compass size={20} />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-display text-xl font-medium tracking-tight text-slate-ink">
-                        Explore Live Map
-                      </span>
-                      <span className="mt-0.5 block text-sm leading-6 text-slate-body">
-                        {active.length} live registers plus the satellite
-                        event feed — what&rsquo;s unfolding, right now.
-                      </span>
-                    </span>
-                    <ArrowRight
-                      size={18}
-                      className="shrink-0 text-slate-body transition-transform group-hover:translate-x-1 group-hover:text-slate-ink"
-                    />
-                  </Link>
-                </Reveal>
-                <Reveal delay={140}>
-                  <Link
-                    href="/tenders"
-                    className="group flex items-center gap-4 rounded-2xl border border-line bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-slate-ink active:scale-[0.98] sm:p-6"
-                  >
-                    <span className="grid size-12 shrink-0 place-items-center rounded-full bg-slate-ink text-white">
-                      <HandCoins size={20} />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-display text-xl font-medium tracking-tight text-slate-ink">
-                        Claim Relief Tenders
-                      </span>
-                      <span className="mt-0.5 block text-sm leading-6 text-slate-body">
-                        {openTenders.length} open relief jobs — food, boats,
-                        shelters, logistics. Browsing is open; claiming needs
-                        sign-in.
-                      </span>
-                    </span>
-                    <ArrowRight
-                      size={18}
-                      className="shrink-0 text-slate-body transition-transform group-hover:translate-x-1 group-hover:text-slate-ink"
-                    />
-                  </Link>
-                </Reveal>
-              </div>
-            </div>
-
-            {/* Column 2 — Network & Support (40%) */}
-            <div className="lg:col-span-2">
-              <Reveal delay={100}>
-                <p className="font-ui text-[11px] font-semibold uppercase tracking-widest text-slate-body">
-                  Network & support
-                </p>
-                <h3 className="mt-1 font-display text-xl font-medium tracking-tight text-slate-ink">
-                  Join or Support
-                </h3>
-              </Reveal>
-              <div className="mt-4 grid gap-4">
-                <Reveal delay={160}>
-                  <Link
-                    href="/register"
-                    className="group block rounded-2xl border border-slate-ink bg-slate-ink p-6 text-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 active:scale-[0.98] sm:p-7"
-                  >
-                    <Building2 size={22} className="text-white/80" />
-                    <span className="mt-4 block font-display text-2xl font-medium tracking-tight">
-                      Register Organisation
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-white/70">
-                      NGO, responder or authority — verified in ~48 hours.
-                      Takes 4 minutes. Sign-in required.
-                    </span>
-                    <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-white">
-                      Start registration
-                      <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </Link>
-                </Reveal>
-                <Reveal delay={220}>
-                  <Link
-                    href="/donate"
-                    className="group block rounded-2xl border border-line bg-teal-tint p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:border-teal-brand active:scale-[0.98] sm:p-7"
-                  >
-                    <HeartHandshake size={22} className="text-teal-brand" />
-                    <span className="mt-4 block font-display text-2xl font-medium tracking-tight text-slate-ink">
-                      Donate <span className="font-mono text-base text-teal-brand">(₹0 Commission)</span>
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-body">
-                      Every rupee on a public ledger. No commission, full
-                      traceability. Sign-in required — pay via UPI, card,
-                      Razorpay, PayPal or crypto (demo).
-                    </span>
-                    <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-teal-brand">
-                      Give today
-                      <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </Link>
-                </Reveal>
-              </div>
-            </div>
-          </div>
-
-          {/* Subtle link bar — NDMA drills + impact reports */}
-          <Reveal delay={120}>
-            <p className="mt-8 border-t border-line pt-5 text-center text-sm leading-6 text-slate-body">
-              Looking to learn?{" "}
-              <Link href="/learn#ndma-drills" className="text-slate-ink underline underline-offset-4 hover:text-teal-brand">
-                Access NDMA Safety Drills
-              </Link>{" "}
-              &{" "}
-              <Link href="/impact" className="text-slate-ink underline underline-offset-4 hover:text-teal-brand">
-                Disaster Impact Reports →
-              </Link>
-            </p>
-          </Reveal>
-        </div>
+        <BentoPaths
+          states={stateCounts}
+          openTenders={openTenders.length}
+          drillCount={NDMA_DRILLS.length}
+        />
       </section>
 
       {/* ============ FEATURED LIVE EMERGENCY — one story, full context ============ */}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Clock, IndianRupee, ShieldCheck, ScrollText, HeartHandshake, FileCheck2, Lock } from "lucide-react";
 import { DonateForm } from "@/components/donate-form";
 import { RequireAuth } from "@/components/require-auth";
+import { LowBandwidthNote } from "@/components/ui";
 import { getAllDisasters } from "@/lib/repo";
 
 export const metadata: Metadata = {
@@ -116,6 +117,7 @@ export default async function DonatePage() {
           <RequireAuth next="/donate" action="donate and pay">
             <DonateForm disasters={disasters} />
           </RequireAuth>
+          <LowBandwidthNote />
         </section>
 
         <aside className="space-y-4">

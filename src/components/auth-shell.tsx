@@ -1,9 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { GridBackdrop, Kicker } from "@/components/ui";
+import { GridBackdrop, Kicker, LowBandwidthNote } from "@/components/ui";
 
 export const authField =
-  "h-11 w-full border border-line-strong bg-surface px-3 font-mono text-sm text-slate-ink placeholder:font-sans placeholder:text-slate-body/60 focus:border-slate-ink focus:outline-none";
+  "h-12 min-h-[48px] w-full border border-line-strong bg-surface px-3 font-mono text-sm text-slate-ink placeholder:font-sans placeholder:text-slate-body/60 focus:border-slate-ink focus:outline-none";
 
 export const authLabel =
   "mb-1.5 block font-ui text-[10px] uppercase tracking-widest text-slate-body";
@@ -66,7 +66,10 @@ export function AuthShell({
             </div>
 
             {/* Form panel */}
-            <div className="p-6 sm:p-8">{children}</div>
+            <div className="p-6 sm:p-8">
+              {children}
+              <LowBandwidthNote />
+            </div>
           </div>
         </div>
       </div>

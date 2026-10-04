@@ -155,8 +155,20 @@ export function SecondaryCTA({
   );
 }
 
-export function StatBlock({
-  value,
+/** Human maintainer notice — sits near auth + payment + registration forms. */
+export function LowBandwidthNote({ className = "" }: { className?: string }) {
+  return (
+    <p
+      className={`mt-5 flex items-start gap-2 border-t border-line pt-4 text-xs leading-5 text-slate-body ${className}`}
+    >
+      <span aria-hidden="true" className="mt-0.5 inline-block size-1.5 shrink-0 rounded-full bg-teal-brand" />
+      Note: built for low-bandwidth mobile networks during emergency power
+      outages — every page stays usable on 2G.
+    </p>
+  );
+}
+
+export function StatBlock({  value,
   label,
 }: {
   value: string;
