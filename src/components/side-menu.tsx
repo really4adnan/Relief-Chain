@@ -28,7 +28,7 @@ import { Logo } from "./logo";
 
 const groups = [
   {
-    title: "Start here",
+    title: "Start here · open to all",
     links: [
       { href: "/start", label: "What do you want to do?", icon: Compass },
       { href: "/impact", label: "What nature can cause", icon: Mountain },
@@ -36,21 +36,21 @@ const groups = [
     ],
   },
   {
-    title: "Live response",
+    title: "Live response · open to all",
     links: [
       { href: "/live", label: "Live tracking", icon: Radio },
       { href: "/disasters", label: "Disaster register", icon: LifeBuoy },
-      { href: "/tenders", label: "Relief tenders", icon: HandCoins },
+      { href: "/tenders", label: "Relief tenders", icon: HandCoins, lock: "claim needs sign-in" },
       { href: "/directory", label: "Verified directory", icon: Users },
-      { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, lock: "sign-in required" },
     ],
   },
   {
-    title: "Act",
+    title: "Act · sign-in required",
     links: [
-      { href: "/account", label: "My account", icon: UserRound },
-      { href: "/donate", label: "Donate", icon: HeartHandshake },
-      { href: "/register", label: "Register organisation", icon: Building2 },
+      { href: "/account", label: "My account", icon: UserRound, lock: "sign-in required" },
+      { href: "/donate", label: "Donate", icon: HeartHandshake, lock: "sign-in required" },
+      { href: "/register", label: "Register organisation", icon: Building2, lock: "sign-in required" },
       { href: "/login", label: "Sign in", icon: ShieldCheck },
       { href: "/signup", label: "Create account", icon: Sparkles },
     ],
@@ -160,6 +160,7 @@ export function SideMenu() {
                         href={l.href}
                         onClick={close}
                         aria-current={active ? "page" : undefined}
+                        title={"lock" in l && l.lock ? `${l.label} — ${l.lock}` : l.label}
                         className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
                           active
                             ? "bg-slate-ink text-bone shadow-[0_6px_18px_rgba(27,11,7,0.25)]"
@@ -167,7 +168,12 @@ export function SideMenu() {
                         }`}
                       >
                         <l.icon size={17} aria-hidden="true" className="shrink-0" />
-                        {l.label}
+                        <span className="min-w-0 flex-1 truncate">{l.label}</span>
+                        {"lock" in l && l.lock && (
+                          <span className="shrink-0 rounded-full border border-line-strong px-1.5 py-0.5 font-ui text-[9px] font-semibold uppercase tracking-widest text-slate-body">
+                            sign-in
+                          </span>
+                        )}
                       </Link>
                     </li>
                   );

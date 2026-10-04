@@ -187,7 +187,9 @@ export function AccountZone() {
                 </h1>
                 <p className="mt-3 max-w-xl text-[15px] leading-7 text-bone/70">
                   Sign in to keep your place on the chain — your tenders,
-                  donations and organisation live here.
+                  donations and organisation live here. No account? Know
+                  Nature, live tracking, NDMA drills and impact reports stay
+                  open for everyone.
                 </p>
               </div>
             )}

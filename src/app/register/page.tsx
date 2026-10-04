@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Lock } from "lucide-react";
 import { INDIA_STATES, orgRegistrationSchema } from "@/lib/validation";
+import { RequireAuth } from "@/components/require-auth";
 
 const kinds = ["NGO", "PWD Company", "Government Body", "Volunteer Group"] as const;
 
@@ -59,16 +61,20 @@ export default function RegisterPage() {
         <p className="font-ui text-xs font-semibold uppercase tracking-widest text-teal-brand">
           Onboarding
         </p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-ink">
+        <h1 className="mt-1 flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight text-slate-ink">
           Register your organisation
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-ink px-2 py-0.5 font-ui text-[10px] font-semibold uppercase tracking-widest text-white">
+            <Lock size={11} /> Sign-in required
+          </span>
         </h1>
         <p className="mt-1 max-w-2xl text-sm">
-          Registration is free. A human verifies your registration certificate
-          (usually within 48 hours) before you appear in the public directory and
-          receive dispatch alerts.
+          Sign in first — registration needs a verified identity. A human then
+          verifies your registration certificate (usually within 48 hours)
+          before you appear in the public directory and receive dispatch alerts.
         </p>
       </div>
 
+      <RequireAuth next="/register" action="register your organisation">
       <div className="mt-8 grid gap-8 lg:grid-cols-[1.4fr_1fr]">
         <form onSubmit={onSubmit} noValidate className="space-y-5">
           {/* honeypot */}
@@ -276,6 +282,7 @@ export default function RegisterPage() {
           </div>
         </aside>
       </div>
+      </RequireAuth>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthShell, authField, authLabel } from "@/components/auth-shell";
 import { GoogleAuthButton } from "@/components/google-auth-button";
 import { getSupabase } from "@/lib/supabase";
@@ -12,19 +12,32 @@ export default function LoginPage() {
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [mode, setMode] = useState<"signin" | "reset">("signin");
+  const [nextPath, setNextPath] = useState("/start");
   const router = useRouter();
+
+  useEffect(() => {
+    const n = new URLSearchParams(window.location.search).get("next");
+    if (n && n.startsWith("/") && !n.startsWith("//")) setNextPath(n);
+  }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const email = String(fd.get("email") ?? "");
     const password = String(fd.get("password") ?? "");
+    const next = nextPath;
 
     const supabase = getSupabase();
     if (!supabase) {
-      setError(
-        "Auth not configured yet — connect Supabase in .env.local, then use the demo dashboard meanwhile.",
-      );
+      // Demo mode (no Supabase keys): keep a local demo session so gated
+      // flows — donate, register, claim tender — can still be tried.
+      try {
+        window.localStorage.setItem("reliefchain-demo-user", email || "demo@reliefchain.org");
+      } catch {
+        /* private mode — still continue */
+      }
+      router.push(next);
+      router.refresh();
       return;
     }
 
@@ -54,7 +67,7 @@ export default function LoginPage() {
       setError(err.message);
       return;
     }
-    router.push("/start");
+    router.push(next);
     router.refresh();
   }
 
@@ -83,7 +96,7 @@ export default function LoginPage() {
       </p>
 
       <div className="mt-4 opacity-60 grayscale">
-        <GoogleAuthButton mode="signin" next="/start" />
+        <GoogleAuthButton mode="signin" next={nextPath} />
       </div>
 
       <div className="my-5 flex items-center gap-3 font-ui text-[10px] uppercase tracking-widest text-slate-body/70">
@@ -162,13 +175,19 @@ export default function LoginPage() {
         </button>
 
         {mode === "signin" && (
-          <button
-            type="button"
-            onClick={() => router.push("/start")}
-            className="inline-flex h-11 w-full items-center justify-center border border-line-strong bg-surface px-6 font-ui text-xs font-medium uppercase tracking-widest text-slate-ink transition-colors hover:bg-canvas"
-          >
-            Explore without signing in
-          </button>
+          <div>
+            <button
+              type="button"
+              onClick={() => router.push("/start")}
+              className="inline-flex h-11 w-full items-center justify-center border border-line-strong bg-surface px-6 font-ui text-xs font-medium uppercase tracking-widest text-slate-ink transition-colors hover:bg-canvas"
+            >
+              Explore without signing in
+            </button>
+            <p className="mt-2 text-center text-xs leading-5 text-slate-body">
+              Skipping keeps Know Nature, live tracking, NDMA drills and impact
+              reports open — donating, registering and claiming need sign-in.
+            </p>
+          </div>
         )}
       </form>
 

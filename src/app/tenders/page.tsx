@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Lock } from "lucide-react";
 import { Badge, SectionHead } from "@/components/ui";
 import { TenderClaim } from "@/components/tender-claim";
 import { inr } from "@/lib/data";
@@ -55,8 +56,21 @@ export default async function TendersPage({
       <SectionHead
         eyebrow="Tenders"
         title="Relief tenders"
-        desc="Verified organisations claim scoped relief jobs. Budgets are escrowed and released against milestone proof — every claim and status change is public."
+        desc="Anyone can browse open relief jobs. Claiming one needs sign-in + verification — budgets are escrowed and released against milestone proof, and every claim is public."
       />
+
+      <p className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-slate-ink/20 bg-slate-ink px-4 py-3 text-sm text-white">
+        <Lock size={14} className="shrink-0 text-warn" />
+        Browsing is open to all. To claim a tender,{" "}
+        <Link href="/login?next=%2Ftenders" className="font-semibold underline underline-offset-4">
+          sign in
+        </Link>{" "}
+        or{" "}
+        <Link href="/register" className="font-semibold underline underline-offset-4">
+          register your organisation
+        </Link>
+        .
+      </p>
 
       {currentDisaster && (
         <div className="rise mb-6 border border-teal-brand/30 bg-teal-tint px-4 py-3 text-sm">

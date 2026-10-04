@@ -189,7 +189,8 @@ export default async function Home() {
                       </span>
                       <span className="mt-0.5 block text-sm leading-6 text-slate-body">
                         {openTenders.length} open relief jobs — food, boats,
-                        shelters, logistics.
+                        shelters, logistics. Browsing is open; claiming needs
+                        sign-in.
                       </span>
                     </span>
                     <ArrowRight
@@ -223,7 +224,7 @@ export default async function Home() {
                     </span>
                     <span className="mt-1 block text-sm leading-6 text-white/70">
                       NGO, responder or authority — verified in ~48 hours.
-                      Takes 4 minutes.
+                      Takes 4 minutes. Sign-in required.
                     </span>
                     <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-white">
                       Start registration
@@ -242,7 +243,8 @@ export default async function Home() {
                     </span>
                     <span className="mt-1 block text-sm leading-6 text-slate-body">
                       Every rupee on a public ledger. No commission, full
-                      traceability.
+                      traceability. Sign-in required — pay via UPI, card,
+                      Razorpay, PayPal or crypto (demo).
                     </span>
                     <span className="mt-4 inline-flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-teal-brand">
                       Give today

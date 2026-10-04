@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Clock, IndianRupee, ShieldCheck, ScrollText, HeartHandshake, FileCheck2 } from "lucide-react";
+import { Clock, IndianRupee, ShieldCheck, ScrollText, HeartHandshake, FileCheck2, Lock } from "lucide-react";
 import { DonateForm } from "@/components/donate-form";
+import { RequireAuth } from "@/components/require-auth";
 import { getAllDisasters } from "@/lib/repo";
 
 export const metadata: Metadata = {
@@ -106,10 +107,15 @@ export default async function DonatePage() {
       {/* Donation form + guarantees */}
       <div className="mt-10 grid gap-8 lg:grid-cols-[1.2fr_1fr]">
         <section>
-          <h2 className="mb-4 border-b border-line pb-2 text-base font-semibold text-slate-ink">
+          <h2 className="mb-4 flex items-center gap-2 border-b border-line pb-2 text-base font-semibold text-slate-ink">
             Make a pledge
+            <span className="inline-flex items-center gap-1 rounded-full bg-slate-ink px-2 py-0.5 font-ui text-[10px] font-semibold uppercase tracking-widest text-white">
+              <Lock size={11} /> Sign-in required
+            </span>
           </h2>
-          <DonateForm disasters={disasters} />
+          <RequireAuth next="/donate" action="donate and pay">
+            <DonateForm disasters={disasters} />
+          </RequireAuth>
         </section>
 
         <aside className="space-y-4">

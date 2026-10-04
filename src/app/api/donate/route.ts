@@ -43,6 +43,9 @@ export async function POST(req: Request) {
 
   const receiptId = `RC-DON-${Date.now().toString(36).toUpperCase()}`;
   const eightyGId = `80G-${receiptId}`;
+  // Demo gateway reference — proves which rail the pledge used.
+  // No real money moves; the pledge is recorded as "pledged" in escrow.
+  const txnId = `TXN-${parsed.data.paymentMethod.toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
   const supabase = getSupabase();
 
   if (supabase) {
@@ -67,6 +70,8 @@ export async function POST(req: Request) {
         ok: true,
         receiptId,
         eightyGId,
+        txnId,
+        paymentMethod: parsed.data.paymentMethod,
         backend: "supabase",
       });
     // Older databases without the name column: retry core-only.
@@ -83,6 +88,8 @@ export async function POST(req: Request) {
           ok: true,
           receiptId,
           eightyGId,
+          txnId,
+          paymentMethod: parsed.data.paymentMethod,
           backend: "supabase",
         });
     }
@@ -96,5 +103,12 @@ export async function POST(req: Request) {
     amount: parsed.data.amount,
   });
 
-  return NextResponse.json({ ok: true, receiptId, eightyGId, backend: "local" });
+  return NextResponse.json({
+    ok: true,
+    receiptId,
+    eightyGId,
+    txnId,
+    paymentMethod: parsed.data.paymentMethod,
+    backend: "local",
+  });
 }

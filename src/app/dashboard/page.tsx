@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { Lock } from "lucide-react";
 import { SectionHead } from "@/components/ui";
 import { DashboardView } from "@/components/dashboard-view";
 import { DashboardSession } from "@/components/dashboard-session";
+import { RequireAuth } from "@/components/require-auth";
 import { getAllDisasters, getLedgerRows } from "@/lib/repo";
 import { isSupabaseConfigured } from "@/lib/supabase";
 
@@ -21,13 +23,19 @@ export default async function DashboardPage() {
       <SectionHead
         eyebrow="Operations · India only"
         title="Operations dashboard"
-        desc="Live state map, dispatch queue and the auditable funds ledger. Sign in to tie this view to your organisation account."
+        desc="Dispatch queue, live state map and the auditable funds ledger. Sign-in required — this view is tied to your organisation account."
         action={{ href: "/tenders", label: "Browse tenders" }}
       />
 
-      <DashboardSession demo={!isSupabaseConfigured} />
+      <p className="mb-6 inline-flex items-center gap-1.5 rounded-full bg-slate-ink px-3 py-1 font-ui text-[10px] font-semibold uppercase tracking-widest text-white">
+        <Lock size={11} /> Sign-in required
+      </p>
 
-      <DashboardView disasters={disasters} ledger={ledger} />
+      <RequireAuth next="/dashboard" action="open the operations dashboard">
+        <DashboardSession demo={!isSupabaseConfigured} />
+
+        <DashboardView disasters={disasters} ledger={ledger} />
+      </RequireAuth>
     </div>
   );
 }

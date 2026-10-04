@@ -1,10 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Lock } from "lucide-react";
+import { useSession } from "@/components/require-auth";
+import { loginHref, signupHref } from "@/lib/access";
 
 export function TenderClaim({ tenderId }: { tenderId: string }) {
   const router = useRouter();
+  const { loading, email } = useSession();
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -39,10 +44,49 @@ export function TenderClaim({ tenderId }: { tenderId: string }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex h-9 items-center rounded bg-teal-brand px-4 text-sm font-semibold text-white transition-all hover:bg-teal-brand-hover active:translate-y-px"
+        disabled={loading}
+        className="inline-flex h-9 items-center gap-1.5 rounded bg-teal-brand px-4 text-sm font-semibold text-white transition-all hover:bg-teal-brand-hover active:translate-y-px disabled:opacity-60"
       >
-        Claim tender
+        <Lock size={13} aria-hidden="true" />
+        {loading ? "Checking sign-in…" : "Claim tender"}
       </button>
+    );
+  }
+
+  // Gated: claiming moves work + money, so it needs a verified identity.
+  // The tender list itself stays public for transparency.
+  if (!loading && !email) {
+    return (
+      <div className="rise mt-3 w-full rounded-xl border border-slate-ink/20 bg-slate-ink p-4 text-white">
+        <p className="flex items-center gap-1.5 font-ui text-[11px] font-semibold uppercase tracking-widest text-white/60">
+          <Lock size={12} className="text-warn" /> Sign in required
+        </p>
+        <p className="mt-1.5 text-sm leading-6 text-white/80">
+          Only signed-in, verified organisations can claim tenders. Sign in,
+          then come back to claim this job.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link
+            href={loginHref("/tenders")}
+            className="inline-flex h-9 items-center rounded-full bg-white px-4 text-xs font-semibold uppercase tracking-widest text-slate-ink"
+          >
+            Sign in
+          </Link>
+          <Link
+            href={signupHref("/tenders")}
+            className="inline-flex h-9 items-center rounded-full border border-white/30 px-4 text-xs font-semibold uppercase tracking-widest text-white"
+          >
+            Create account
+          </Link>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="inline-flex h-9 items-center rounded-full px-3 text-xs text-white/60 hover:text-white"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
     );
   }
 

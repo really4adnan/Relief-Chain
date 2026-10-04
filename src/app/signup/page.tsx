@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthShell, authField, authLabel } from "@/components/auth-shell";
 import { GoogleAuthButton } from "@/components/google-auth-button";
 import { getSupabase } from "@/lib/supabase";
@@ -11,7 +11,13 @@ import { signupSchema } from "@/lib/validation";
 export default function SignupPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "busy" | "confirm">("idle");
+  const [nextPath, setNextPath] = useState("/start");
   const router = useRouter();
+
+  useEffect(() => {
+    const n = new URLSearchParams(window.location.search).get("next");
+    if (n && n.startsWith("/") && !n.startsWith("//")) setNextPath(n);
+  }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -29,9 +35,18 @@ export default function SignupPage() {
 
     const supabase = getSupabase();
     if (!supabase) {
-      setErrors({
-        form: "Auth not configured yet — connect Supabase in .env.local first.",
-      });
+      // Demo mode (no Supabase keys): keep a local demo session so gated
+      // flows — donate, register, claim tender — can still be tried.
+      try {
+        window.localStorage.setItem(
+          "reliefchain-demo-user",
+          parsed.data.email || "demo@reliefchain.org",
+        );
+      } catch {
+        /* private mode — still continue */
+      }
+      router.push(nextPath);
+      router.refresh();
       return;
     }
 
@@ -52,7 +67,7 @@ export default function SignupPage() {
     }
 
     if (data.session) {
-      router.push("/start");
+      router.push(nextPath);
       router.refresh();
       return;
     }
@@ -100,7 +115,7 @@ export default function SignupPage() {
             use Email / Magic Link to create your account.
           </p>
           <div className="mt-4 opacity-60 grayscale">
-            <GoogleAuthButton mode="signup" next="/start" />
+            <GoogleAuthButton mode="signup" next={nextPath} />
           </div>
           <div className="my-5 flex items-center gap-3 font-ui text-[10px] uppercase tracking-widest text-slate-body/70">
             <span className="h-px flex-1 bg-line" />

@@ -51,6 +51,16 @@ export const contactSchema = z.object({
   message: z.string().min(20, "Message must be at least 20 characters").max(2000),
 });
 
+export const paymentMethods = [
+  "upi",
+  "card",
+  "razorpay",
+  "paypal",
+  "crypto",
+] as const;
+
+export type PaymentMethod = (typeof paymentMethods)[number];
+
 export const donationSchema = z.object({
   website: z.string().max(0, "Bot detected"),
   submittedAt: submittedAtField,
@@ -58,6 +68,10 @@ export const donationSchema = z.object({
   amount: z.coerce.number().int().min(100, "Minimum donation is ₹100").max(10000000),
   email: z.email("Enter a valid email for your receipt"),
   disasterId: z.string().min(1, "Choose a disaster to support"),
+  paymentMethod: z.enum(paymentMethods, "Choose a payment method"),
+  // Method-specific reference collected at checkout (demo only):
+  // UPI id, card last-4, PayPal email, crypto tx hint, Razorpay order hint.
+  paymentRef: z.string().max(120).optional().default(""),
 });
 
 export const tenderClaimSchema = z.object({
