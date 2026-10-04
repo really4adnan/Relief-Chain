@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Lock } from "lucide-react";
-import { Badge, SectionHead } from "@/components/ui";
-import { TenderClaim } from "@/components/tender-claim";
+import { Eye, Lock } from "lucide-react";
+import { SectionHead } from "@/components/ui";
+import { TenderList } from "@/components/tender-preview";
 import { inr } from "@/lib/data";
 import { getAllDisasters, getAllTenders } from "@/lib/repo";
 
@@ -13,13 +13,6 @@ export const metadata: Metadata = {
 };
 
 const statuses = ["All", "Open", "Claimed", "In Progress", "Completed"] as const;
-
-function statusTone(status: string) {
-  if (status === "Open") return "ok" as const;
-  if (status === "Claimed") return "teal" as const;
-  if (status === "In Progress") return "warn" as const;
-  return "neutral" as const;
-}
 
 export default async function TendersPage({
   searchParams,
@@ -60,16 +53,16 @@ export default async function TendersPage({
       />
 
       <p className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-slate-ink/20 bg-slate-ink px-4 py-3 text-sm text-white">
-        <Lock size={14} className="shrink-0 text-warn" />
-        Browsing is open to all. To claim a tender,{" "}
-        <Link href="/login?next=%2Ftenders" className="font-semibold underline underline-offset-4">
-          sign in
-        </Link>{" "}
-        or{" "}
-        <Link href="/register" className="font-semibold underline underline-offset-4">
-          register your organisation
-        </Link>
-        .
+        <Eye size={14} className="shrink-0 text-emerald-300" aria-hidden="true" />
+        Browsing is open to all — tap <strong>Preview details</strong> on any
+        tender for the full scope, no sign-in needed.{" "}
+        <span className="inline-flex items-center gap-1">
+          <Lock size={12} className="text-warn" aria-hidden="true" />
+          Claiming needs{" "}
+          <Link href="/login?next=%2Ftenders" className="font-semibold underline underline-offset-4">
+            sign-in
+          </Link>
+        </span>
       </p>
 
       {currentDisaster && (
@@ -90,7 +83,8 @@ export default async function TendersPage({
           <Link
             key={s}
             href={qs(s)}
-            className={`border px-3 py-1.5 text-sm font-medium transition-colors ${
+            aria-pressed={statusFilter === s}
+            className={`inline-flex min-h-[48px] items-center rounded-full border px-4 text-sm font-medium transition-all hover:-translate-y-0.5 active:scale-[0.98] ${
               statusFilter === s
                 ? "border-teal-brand bg-teal-brand text-white"
                 : "border-line bg-surface text-slate-body hover:text-slate-ink"
@@ -120,69 +114,7 @@ export default async function TendersPage({
         </div>
       </div>
 
-      <ul className="space-y-4">
-        {list.map((t, i) => {
-          const d = disasters.find((x) => x.id === t.disasterId);
-          return (
-            <li
-              key={t.id}
-              className={`card-hover rise border border-line bg-surface p-5 rise-${Math.min((i % 6) + 1, 6)}`}
-            >
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-mono text-xs font-semibold text-teal-brand">
-                  {t.ref}
-                </span>
-                <Badge tone={statusTone(t.status)}>{t.status}</Badge>
-                <span className="font-mono text-xs text-slate-body">
-                  closes {new Date(t.closesAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}
-                </span>
-              </div>
-              <h2 className="mt-2 text-base font-semibold text-slate-ink">
-                {t.title}
-              </h2>
-              <p className="mt-1 text-sm text-slate-body">
-                {t.region}
-                {d ? ` · ${d.title}` : ""}
-              </p>
-              {t.claimedByName && (
-                <p className="mt-1 font-mono text-xs text-teal-brand">
-                  claimed by {t.claimedByName}
-                </p>
-              )}
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                {t.skills.map((s) => (
-                  <span
-                    key={s}
-                    className="border border-line bg-canvas px-2 py-0.5 font-ui text-[11px] uppercase text-slate-body"
-                  >
-                    {s}
-                  </span>
-                ))}
-                <span className="ml-auto font-mono text-base font-semibold text-slate-ink">
-                  {inr(t.budget)}
-                </span>
-              </div>
-              <div className="mt-3">
-                {t.status === "Open" ? (
-                  <TenderClaim tenderId={t.id} />
-                ) : (
-                  <Link
-                    href="/live"
-                    className="link-sweep text-sm font-semibold text-teal-brand"
-                  >
-                    Track progress on the live map →
-                  </Link>
-                )}
-              </div>
-            </li>
-          );
-        })}
-        {list.length === 0 && (
-          <li className="border border-dashed border-line bg-surface p-8 text-center text-sm">
-            No tenders match this filter.
-          </li>
-        )}
-      </ul>
+      <TenderList tenders={list} disasters={disasters} />
     </div>
   );
 }

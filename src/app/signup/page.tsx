@@ -79,9 +79,9 @@ export default function SignupPage() {
     <AuthShell
       eyebrow="Create account"
       title="Create your account."
-      desc="Takes under a minute. Google one-tap works too — after signup we ask why you're here, then show what nature can do and how ReliefChain helps."
+      desc="Takes under a minute. Google redirect, passkey or email — after signup we ask why you're here, then show what nature can do and how ReliefChain helps."
       points={[
-        "Continue with Google in one tap",
+        "Google redirect, passkey, or magic link",
         "Free forever for verified organisations",
         "One account, many responders on your team",
       ]}
@@ -107,16 +107,7 @@ export default function SignupPage() {
         </div>
       ) : (
         <>
-          <p className="rounded-xl border border-warn/30 bg-warn-tint px-4 py-3 text-sm leading-6 text-slate-ink">
-            <span className="font-ui text-[11px] font-semibold uppercase tracking-widest text-warn">
-              Notice&nbsp;·&nbsp;
-            </span>
-            Google One-Tap Login is under routine maintenance. Please
-            use Email / Magic Link to create your account.
-          </p>
-          <div className="mt-4 opacity-60 grayscale">
-            <GoogleAuthButton mode="signup" next={nextPath} />
-          </div>
+          <GoogleAuthButton mode="signup" next={nextPath} />
           <div className="my-5 flex items-center gap-3 font-ui text-[10px] uppercase tracking-widest text-slate-body/70">
             <span className="h-px flex-1 bg-line" />
             or with email

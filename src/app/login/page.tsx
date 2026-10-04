@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AuthShell, authField, authLabel } from "@/components/auth-shell";
 import { GoogleAuthButton } from "@/components/google-auth-button";
+import { PasskeyButton } from "@/components/passkey-button";
 import { getSupabase } from "@/lib/supabase";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [mode, setMode] = useState<"signin" | "reset">("signin");
+  const [mode, setMode] = useState<"signin" | "link" | "reset">("signin");
   const [nextPath, setNextPath] = useState("/start");
   const router = useRouter();
 
@@ -58,6 +59,22 @@ export default function LoginPage() {
       return;
     }
 
+    if (mode === "link") {
+      const { error: err } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        },
+      });
+      setBusy(false);
+      if (err) {
+        setError(err.message);
+        return;
+      }
+      setNotice("Magic link sent — tap it in your inbox to sign in.");
+      return;
+    }
+
     const { error: err } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -74,10 +91,16 @@ export default function LoginPage() {
   return (
     <AuthShell
       eyebrow="Sign in"
-      title={mode === "reset" ? "Reset your password." : "Sign in to see."}
+      title={
+        mode === "reset"
+          ? "Reset your password."
+          : mode === "link"
+            ? "Check your inbox."
+            : "Sign in to see."
+      }
       desc="You asked what nature can do — step inside. One login opens live disasters, relief work and Know Nature lessons for your whole team."
       points={[
-        "Continue with Google in one tap",
+        "Google redirect, passkey, or magic link — no waiting rooms",
         "Role-based access for NGO, PWD & gov bodies",
         "Real-time alerts across all 36 states & UTs",
       ]}
@@ -87,16 +110,10 @@ export default function LoginPage() {
         text: "New to ReliefChain?",
       }}
     >
-      <p className="rounded-xl border border-warn/30 bg-warn-tint px-4 py-3 text-sm leading-6 text-slate-ink">
-        <span className="font-ui text-[11px] font-semibold uppercase tracking-widest text-warn">
-          Notice&nbsp;·&nbsp;
-        </span>
-        Google One-Tap Login is under routine maintenance. Please use
-        Email / Magic Link to log in.
-      </p>
+      <GoogleAuthButton mode="signin" next={nextPath} />
 
-      <div className="mt-4 opacity-60 grayscale">
-        <GoogleAuthButton mode="signin" next={nextPath} />
+      <div className="my-5">
+        <PasskeyButton next={nextPath} />
       </div>
 
       <div className="my-5 flex items-center gap-3 font-ui text-[10px] uppercase tracking-widest text-slate-body/70">
@@ -154,25 +171,40 @@ export default function LoginPage() {
           className="inline-flex h-11 w-full items-center justify-center bg-teal-brand px-6 font-ui text-xs font-medium uppercase tracking-widest text-white transition-colors hover:bg-teal-brand-hover disabled:opacity-60"
         >
           {busy
-            ? mode === "reset"
+            ? mode === "reset" || mode === "link"
               ? "Sending…"
               : "Signing in…"
             : mode === "reset"
               ? "Send reset link"
-              : "Sign in"}
+              : mode === "link"
+                ? "Send magic link"
+                : "Sign in"}
         </button>
 
-        <button
-          type="button"
-          onClick={() => {
-            setMode(mode === "reset" ? "signin" : "reset");
-            setError(null);
-            setNotice(null);
-          }}
-          className="w-full text-center font-ui text-[11px] uppercase tracking-widest text-slate-body hover:text-slate-ink"
-        >
-          {mode === "reset" ? "← Back to sign in" : "Forgot password?"}
-        </button>
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === "link" ? "signin" : "link");
+              setError(null);
+              setNotice(null);
+            }}
+            className="text-center font-ui text-[11px] uppercase tracking-widest text-slate-body hover:text-slate-ink"
+          >
+            {mode === "link" ? "← Use password instead" : "Email me a magic link"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === "reset" ? "signin" : "reset");
+              setError(null);
+              setNotice(null);
+            }}
+            className="text-center font-ui text-[11px] uppercase tracking-widest text-slate-body hover:text-slate-ink"
+          >
+            {mode === "reset" ? "← Back to sign in" : "Forgot password?"}
+          </button>
+        </div>
 
         {mode === "signin" && (
           <div>

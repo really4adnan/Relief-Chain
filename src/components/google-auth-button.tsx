@@ -81,7 +81,7 @@ export function GoogleAuthButton({
         </p>
       )}
       <p className="mt-2 text-center font-ui text-[10px] uppercase tracking-widest text-slate-body/70">
-        One tap · no password needed
+        Secure OAuth redirect · no password needed
       </p>
     </div>
   );

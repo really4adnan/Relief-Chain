@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Building2,
   Compass,
@@ -72,6 +72,9 @@ const groups = [
 export function SideMenu() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const panelRef = useRef<HTMLElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
 
   const close = () => setOpen(false);
 
@@ -93,10 +96,45 @@ export function SideMenu() {
       document.body.style.overflow = "";
     };
   }, [open ]);
+  // Focus trap: keep keyboard focus inside the dialog while open,
+  // move focus in on open and return it to the trigger on close.
+  useEffect(() => {
+    if (!open) {
+      // Return focus to the trigger on close — but never steal it on mount.
+      if (wasOpen.current) triggerRef.current?.focus({ preventScroll: true });
+      wasOpen.current = false;
+      return;
+    }
+    wasOpen.current = true;
+    const panel = panelRef.current;
+    const closeBtn = panel?.querySelector<HTMLButtonElement>(
+      'button[aria-label="Close site menu"]',
+    );
+    closeBtn?.focus({ preventScroll: true });
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !panel) return;
+      const items = [...panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), select, input, [tabindex]:not([tabindex="-1"])',
+      )].filter((el) => el.offsetParent !== null);
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open ]);
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Open site menu"
@@ -119,6 +157,7 @@ export function SideMenu() {
 
       {/* left tab — always full height */}
       <aside
+        ref={panelRef}
         id="site-menu-tab"
         role="dialog"
         aria-modal="true"

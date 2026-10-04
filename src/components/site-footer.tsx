@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { BrandLogo } from "./brand-logo";
 import { Logo } from "./logo";
 
 function FooterCol({
@@ -10,18 +11,19 @@ function FooterCol({
   links: { href: string; label: string }[];
 }) {
   return (
-    <div>
+    <div className="min-w-0">
       <h2 className="font-ui text-[11px] uppercase tracking-widest text-slate-body/70">
         {title}
       </h2>
-      <ul className="mt-4 space-y-2.5">
+      <ul className="mt-4 space-y-0.5">
         {links.map((l) => (
-          <li key={l.href}>
+          <li key={l.href} className="min-w-0">
             <Link
               href={l.href}
-              className="group inline-flex items-center font-ui text-[11px] uppercase tracking-widest text-slate-body transition-colors hover:text-slate-ink"
+              aria-label={`Footer — ${l.label}`}
+              className="group inline-flex min-h-[48px] items-center font-ui text-[11px] uppercase tracking-widest text-slate-body transition-colors hover:text-slate-ink"
             >
-              {l.label}
+              <span className="truncate">{l.label}</span>
               <span className="caret-blink hidden group-hover:inline">_</span>
             </Link>
           </li>
@@ -34,9 +36,10 @@ function FooterCol({
 export function SiteFooter() {
   return (
     <footer className="border-t border-line bg-canvas">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-5">
-        <div>
-          <div className="flex items-center gap-2 text-slate-ink">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 py-12 min-[380px]:grid-cols-2 sm:px-6 lg:grid-cols-5 lg:gap-10">
+        <div className="min-w-0 min-[380px]:col-span-2 lg:col-span-1">
+          <BrandLogo className="h-20 w-auto max-w-full" />
+          <div className="mt-3 flex items-center gap-2 text-slate-ink">
             <Logo className="h-5 w-5" />
             <span className="font-display text-lg font-semibold tracking-tight">
               ReliefChain
@@ -100,9 +103,9 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 font-ui text-[11px] uppercase tracking-widest text-slate-body sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 font-ui text-[11px] uppercase tracking-widest text-slate-body sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-6 sm:px-6">
           <p>© {new Date().getFullYear()} ReliefChain</p>
-          <p className="inline-flex items-center gap-2 normal-case tracking-normal">
+          <p className="inline-flex min-h-[48px] flex-wrap items-center gap-2 normal-case tracking-normal">
             <span className="uppercase tracking-widest text-slate-body/70">
               Designed & built by Adnan A. Laskar
             </span>
@@ -110,18 +113,21 @@ export function SiteFooter() {
               href="https://www.linkedin.com/in/adnan-a-laskar-510661426/"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Adnan A. Laskar on LinkedIn"
-              className="grid size-7 place-items-center rounded-full border border-line-strong text-slate-body transition-all hover:-translate-y-0.5 hover:border-teal-brand hover:text-teal-brand"
+              aria-label="Adnan A. Laskar on LinkedIn (opens in a new tab)"
+              className="inline-flex min-h-[48px] min-w-[48px] items-center gap-1.5 rounded-full border border-line-strong px-3.5 text-slate-body transition-all hover:-translate-y-0.5 hover:border-teal-brand hover:text-teal-brand"
             >
-              <ExternalLink size={14} />
+              <ExternalLink size={14} aria-hidden="true" />
+              <span className="font-ui text-[10px] font-semibold uppercase tracking-widest">
+                LinkedIn
+              </span>
             </a>
           </p>
-          <p>Emergency dial{" "}
-            <a href="tel:112" className="font-mono font-semibold normal-case text-slate-ink underline underline-offset-4">
+          <p className="inline-flex min-h-[48px] flex-wrap items-center gap-x-2">Emergency dial{" "}
+            <a href="tel:112" aria-label="Call emergency number 112" className="inline-flex min-h-[48px] items-center font-mono font-semibold normal-case text-slate-ink underline underline-offset-4">
               112
             </a>{" "}
             · NDMA{" "}
-            <a href="tel:1078" className="font-mono font-semibold normal-case text-slate-ink underline underline-offset-4">
+            <a href="tel:1078" aria-label="Call NDMA helpline 1078" className="inline-flex min-h-[48px] items-center font-mono font-semibold normal-case text-slate-ink underline underline-offset-4">
               1078
             </a>
           </p>

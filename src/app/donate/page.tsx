@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Clock, IndianRupee, ShieldCheck, ScrollText, HeartHandshake, FileCheck2, Lock } from "lucide-react";
+import { Clock, IndianRupee, ShieldCheck, ScrollText, HeartHandshake, FileCheck2, Lock, Eye } from "lucide-react";
 import { DonateForm } from "@/components/donate-form";
 import { RequireAuth } from "@/components/require-auth";
 import { LowBandwidthNote } from "@/components/ui";
-import { getAllDisasters } from "@/lib/repo";
+import { inr } from "@/lib/data";
+import { getAllDisasters, getLedgerRows } from "@/lib/repo";
 
 export const metadata: Metadata = {
   title: "Donate to disaster relief",
@@ -52,7 +53,17 @@ const examples = [
 ];
 
 export default async function DonatePage() {
-  const disasters = await getAllDisasters();
+  const [disasters, ledger] = await Promise.all([
+    getAllDisasters(),
+    getLedgerRows(),
+  ]);
+  const escrowedIn = ledger
+    .filter((r) => r.kind === "in")
+    .reduce((s, r) => s + r.amount, 0);
+  const releasedOut = ledger
+    .filter((r) => r.kind === "out")
+    .reduce((s, r) => s + Math.abs(r.amount), 0);
+  const recent = ledger.slice(0, 8);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -102,6 +113,78 @@ export default async function DonatePage() {
         </ul>
         <p className="mt-2 font-mono text-[11px] text-slate-body">
           Illustrative costs — actual tender pricing is published per event.
+        </p>
+      </section>
+
+      {/* Public ledger preview — guest-visible transparency, no sign-in */}
+      <section className="mt-6 border border-line bg-surface" aria-label="Public funds ledger preview">
+        <div className="flex flex-wrap items-center gap-2 border-b border-line px-5 py-4">
+          <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-ink">
+            <Eye size={15} className="text-teal-brand" aria-hidden="true" />
+            Public ledger — guest preview
+          </h2>
+          <span className="rounded-full bg-ok-tint px-2.5 py-1 font-ui text-[10px] font-semibold uppercase tracking-widest text-ok">
+            No sign-in needed
+          </span>
+          <span className="ml-auto font-mono text-[11px] text-slate-body">
+            ₹0 commission · every rupee traceable
+          </span>
+        </div>
+        <div className="grid gap-px border-b border-line bg-line sm:grid-cols-3">
+          <div className="bg-surface px-5 py-4">
+            <p className="font-mono text-xl font-semibold text-ok">{inr(escrowedIn)}</p>
+            <p className="mt-0.5 font-ui text-[10px] uppercase tracking-widest text-slate-body">
+              Escrowed in
+            </p>
+          </div>
+          <div className="bg-surface px-5 py-4">
+            <p className="font-mono text-xl font-semibold text-slate-ink">{inr(releasedOut)}</p>
+            <p className="mt-0.5 font-ui text-[10px] uppercase tracking-widest text-slate-body">
+              Released on milestones
+            </p>
+          </div>
+          <div className="bg-surface px-5 py-4">
+            <p className="font-mono text-xl font-semibold text-slate-ink">{inr(Math.max(0, escrowedIn - releasedOut))}</p>
+            <p className="mt-0.5 font-ui text-[10px] uppercase tracking-widest text-slate-body">
+              Sitting in escrow now
+            </p>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[560px] text-left text-sm">
+            <thead className="bg-canvas">
+              <tr className="border-b border-line font-ui text-[10px] uppercase tracking-widest text-slate-body">
+                <th className="px-5 py-2.5 font-medium">Date</th>
+                <th className="px-5 py-2.5 font-medium">Entry</th>
+                <th className="px-5 py-2.5 text-right font-medium">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recent.map((row) => (
+                <tr key={row.ref} className="border-b border-line last:border-0">
+                  <td className="px-5 py-2.5 font-mono text-xs">{row.date}</td>
+                  <td className="px-5 py-2.5">
+                    <p className="text-slate-ink">{row.note}</p>
+                    <p className="font-mono text-[11px] text-slate-body">{row.ref}</p>
+                  </td>
+                  <td className={`px-5 py-2.5 text-right font-mono ${row.kind === "in" ? "text-ok" : "text-slate-ink"}`}>
+                    {row.kind === "in" ? "+" : "−"}{inr(Math.abs(row.amount))}
+                  </td>
+                </tr>
+              ))}
+              {recent.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="px-5 py-8 text-center text-sm text-slate-body">
+                    No ledger entries yet — pledges appear here in public.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <p className="px-5 py-3 text-xs leading-5 text-slate-body">
+          Read-only preview for transparency audits. Pledging moves money, so
+          the form below needs sign-in — the numbers above never do.
         </p>
       </section>
 

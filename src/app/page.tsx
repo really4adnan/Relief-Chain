@@ -225,19 +225,12 @@ export default async function Home() {
           <div className="mt-8 grid gap-5 md:grid-cols-2">
             <Reveal>
               <div className="flex h-full flex-col rounded-2xl border border-line bg-white p-7 shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:p-8">
-                <p className="rounded-xl border border-warn/30 bg-warn-tint px-4 py-3 text-sm leading-6 text-slate-ink">
-                  <span className="font-ui text-[11px] font-semibold uppercase tracking-widest text-warn">
-                    Notice&nbsp;·&nbsp;
-                  </span>
-                  Google One-Tap Login is under routine maintenance.
-                  Please use Email / Magic Link to log in.
-                </p>
-                <h3 className="mt-5 font-display text-2xl font-medium tracking-tight text-slate-ink">
-                  Sign in with email
+                <h3 className="font-display text-2xl font-medium tracking-tight text-slate-ink">
+                  Sign in your way
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-slate-body">
-                  Password or magic link — then pick your path and explore
-                  impact, tenders and lessons.
+                  Google redirect, device passkey, or magic link — then pick
+                  your path and explore impact, tenders and lessons.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <PrimaryCTA href="/login">Open sign in</PrimaryCTA>

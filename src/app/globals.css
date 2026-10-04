@@ -182,8 +182,8 @@ textarea {
 }
 
 /* ============ Touch targets & tactile press (WCAG 2.5.8) ============
-   Every button and CTA link clears 48px; icon-only round buttons also
-   clear 48px wide. Inline text links are untouched.
+   Every button clears 48px tall; every CTA link too. Icon-only
+   buttons also clear 48px wide. Inline text links are untouched.
    Tactile pattern: hover lifts -2px, press scales to 0.98. */
 button,
 a[class*="inline-flex"] {
